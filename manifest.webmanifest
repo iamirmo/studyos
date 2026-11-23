@@ -1,0 +1,60 @@
+{
+  "id": "./",
+  "name": "StudyOS | فضای شخصی مطالعه",
+  "short_name": "StudyOS",
+  "description": "برنامه‌ریزی، اتاق مطالعه، تایمر، ثبت گزارش و تحلیل پیشرفت شخصی.",
+  "lang": "fa",
+  "dir": "rtl",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "display_override": [
+    "standalone",
+    "minimal-ui"
+  ],
+  "orientation": "any",
+  "background_color": "#10162e",
+  "theme_color": "#10162e",
+  "categories": [
+    "education",
+    "productivity"
+  ],
+  "icons": [
+    {
+      "src": "./icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "./icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "اتاق مطالعه",
+      "short_name": "شروع مطالعه",
+      "url": "./#room",
+      "icons": [
+        {
+          "src": "./icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "گزارش روزانه",
+      "short_name": "گزارش",
+      "url": "./#reports",
+      "icons": [
+        {
+          "src": "./icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ]
+}
