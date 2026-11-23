@@ -127,6 +127,77 @@ body{background:radial-gradient(ellipse at 78% 0%,rgba(138,122,239,.055),transpa
 .install-app-btn{font-size:10px;padding:8px 12px;border:1px solid rgba(125,104,232,.12);box-shadow:0 5px 16px rgba(110,95,207,.08)}
 .install-app-btn.installed{background:#e8f8f4;color:#21977f}
 @media(max-width:620px){.install-app-btn{padding:7px 9px;font-size:9px}.topbar-actions{gap:6px}}
+
+/* ===== StudyOS responsive repair · iPhone / small screens ===== */
+/* The off-canvas RTL sidebar was expanding the page's layout viewport on iOS.
+   Clip horizontal overflow at the document boundary while keeping the drawer usable. */
+html,body{
+  width:100%;max-width:100%;margin:0;
+  overflow-x:hidden!important;
+  overscroll-behavior-x:none;
+}
+body{min-width:0!important;-webkit-text-size-adjust:100%;}
+.app-shell{width:100%;max-width:100%;min-width:0;}
+.main-area,.view-root{width:100%;max-width:100%;min-width:0;}
+.main-area{overflow-x:clip;}
+.view-root{overflow-x:clip;}
+img,svg,video,iframe{max-width:100%;}
+input,select,textarea{max-width:100%;}
+.card,.hero-panel,.room-ambient,.week-adaptive,.countdown-tile{min-width:0;}
+@media(max-width:900px){
+  .sidebar{width:min(280px,88vw);max-width:88vw;transform:translate3d(110%,0,0);}
+  .sidebar.open{transform:translate3d(0,0,0);}
+  .main-area{margin-right:0;width:100%;}
+}
+@media(max-width:760px){
+  .week-adaptive-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .week-adaptive{padding:14px;}
+  .week-adaptive-head{align-items:flex-start;flex-direction:column;}
+}
+@media(max-width:620px){
+  html,body{overflow-x:hidden!important;}
+  .topbar{gap:8px;padding-left:12px;padding-right:12px;}
+  .topbar-left,.topbar-actions{min-width:0;gap:6px;}
+  .topbar-left{flex:1;}
+  .breadcrumb{min-width:0;overflow:hidden;white-space:nowrap;}
+  .breadcrumb strong{min-width:0;overflow:hidden;text-overflow:ellipsis;}
+  .topbar-actions{flex-shrink:0;}
+  .view-root{padding:16px 12px 22px;}
+  .app-footer{padding-left:12px;padding-right:12px;}
+  .card,.hero-panel,.room-ambient,.week-adaptive{max-width:100%;min-width:0;}
+  .card-head,.card-body{min-width:0;}
+  .metrics-grid{grid-template-columns:repeat(2,minmax(0,1fr));}
+  .dashboard-grid,.room-layout,.room-premium-layout,.analytics-grid,
+  .assistant-layout,.settings-layout{grid-template-columns:minmax(0,1fr);}
+  .room-tools{display:grid;grid-template-columns:minmax(0,1fr);}
+  .room-tools .music-card{grid-column:auto;}
+  .week-switch{min-width:0;max-width:100%;flex-wrap:wrap;}
+  .week-switch strong{min-width:0;flex:1;text-align:center;}
+  .schedule-toolbar>span{max-width:100%;overflow-wrap:anywhere;}
+  .table-wrap{width:100%;max-width:100%;overflow-x:auto;-webkit-overflow-scrolling:touch;}
+  .data-table{min-width:500px;}
+  .modal{width:100%;max-width:100%;max-height:calc(100dvh - 24px);}
+  .toast-stack{left:12px!important;right:12px!important;width:auto;max-width:none;}
+  .btn{max-width:100%;white-space:normal;}
+  .hero-actions{flex-wrap:wrap;}
+  .hero-actions .btn{flex:1 1 auto;}
+  .music-form{flex-direction:column;}
+  .room-controls .btn{min-width:0;flex:1 1 auto;}
+  .settings-tabs{max-width:100%;}
+}
+@media(max-width:360px){
+  .view-root{padding-left:10px;padding-right:10px;}
+  .topbar{padding-left:10px;padding-right:10px;}
+  .metrics-grid{grid-template-columns:1fr;}
+  .metric-card{min-width:0;}
+  .page-heading h1{font-size:20px;}
+  .room-ambient .timer-ring{width:min(225px,72vw);height:min(225px,72vw);}
+}
+@supports(padding:max(0px)){
+  .view-root{padding-bottom:max(22px,env(safe-area-inset-bottom));}
+  .app-footer{padding-bottom:max(18px,env(safe-area-inset-bottom));}
+}
+
 </style>
 </head>
 <body>
