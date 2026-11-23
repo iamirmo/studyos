@@ -198,6 +198,13 @@ input,select,textarea{max-width:100%;}
   .app-footer{padding-bottom:max(18px,env(safe-area-inset-bottom));}
 }
 
+
+/* StudyOS 0.4 planner refinements */
+.planner-toolbar{align-items:center;gap:10px}.planner-summary{margin-bottom:14px}.planner-days{grid-template-columns:repeat(2,minmax(0,1fr));align-items:start}.planner-day{min-width:0}.day-head-actions{display:flex;align-items:center;gap:7px}.day-head-actions .btn{min-width:30px;padding:6px 8px}.event-course-meta{margin-top:5px;color:#7c6cd8;font-size:9px;font-weight:800}.course-weight-panel{margin-top:15px;padding:14px 16px;background:#fff;border:1px solid var(--line);border-radius:16px;box-shadow:0 8px 24px rgba(29,43,82,.035)}.course-weight-panel summary{cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:10px;font-weight:850;font-size:12px;color:#263354;list-style:none}.course-weight-panel summary::-webkit-details-marker{display:none}.course-weight-panel summary:after{content:'＋';color:var(--purple);font-size:18px}.course-weight-panel[open] summary:after{content:'−'}.course-weight-panel summary span{font-size:9px;color:#9aa4b7;font-weight:600;margin-right:auto}.course-weight-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:14px 0}.course-weight-item{display:flex;justify-content:space-between;align-items:center;gap:8px;min-width:0;padding:9px 10px;border-radius:11px;background:#f7f8fc;border:1px solid #edf0f6}.course-weight-item.general-course{border-right:3px solid #70b47a}.course-weight-item.special-course{border-right:3px solid #78a9dc}.course-weight-item strong{display:block;font-size:10px;line-height:1.55}.course-weight-item small{display:block;font-size:8px;color:#9aa4b7}.course-weight-item b{flex:0 0 auto;color:#4e5d82;font-size:12px;direction:ltr}.course-weight-panel .field-help{font-size:9px;line-height:1.8}.planner-help{margin-top:13px}.jalali-date-input{direction:ltr;text-align:center;font-variant-numeric:tabular-nums}.duration-preview{margin-top:10px;padding:9px 12px;border-radius:10px;background:#f2f0ff;color:#6c5bd0;font-size:11px;font-weight:800}.checkbox-line{display:flex;align-items:center;gap:8px;font-size:11px!important}.checkbox-line input{width:17px;height:17px;accent-color:#7868df}.planner-form .form-grid{gap:12px}.planner-form [hidden]{display:none!important}.planner-form input,.planner-form select,.planner-form textarea{min-height:42px}.planner-form textarea{min-height:75px}
+@media(max-width:900px){.planner-days{grid-template-columns:repeat(2,minmax(0,1fr))}.course-weight-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:620px){.planner-days{grid-template-columns:minmax(0,1fr)}.course-weight-grid{grid-template-columns:minmax(0,1fr)}.course-weight-item{padding:10px 12px}.course-weight-panel{padding:13px}.course-weight-panel summary{font-size:11px}.planner-toolbar .week-switch{display:grid;grid-template-columns:auto 1fr auto}.planner-toolbar .week-switch strong{font-size:10px}.day-head-actions{gap:5px}.event-card{padding:9px}.event-title{font-size:11px}.event-sub{font-size:9px;line-height:1.75}.event-actions button{padding:5px 8px}.planner-form .form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.planner-form .field.full{grid-column:1/-1}.planner-form .field label{font-size:10px}.planner-form input,.planner-form select{font-size:12px}.planner-form .modal-foot{flex-wrap:wrap}.jalali-date-input{min-width:0;width:100%}}
+@media(max-width:380px){.planner-form .form-grid{grid-template-columns:minmax(0,1fr)}.planner-form .field.full{grid-column:auto}.day-head-actions .badge{font-size:8px}}
+
 </style>
 </head>
 <body>
@@ -274,7 +281,7 @@ window.STUDYOS_PLAN = {"events":[{"id":"p33","date":"2026-11-23","start":"۱۳:�
   const LATIN_DIGITS = '0123456789';
   const titles = {dashboard:'داشبورد',schedule:'برنامه درسی',room:'اتاق مطالعه',analytics:'تحلیل عملکرد',review:'مرور و دفتر خطا',assistant:'دستیار هوشمند',reports:'گزارش روزانه',settings:'تنظیمات'};
   const typeLabels = {learn:'آموزش',practice:'تمرین و تست',recall:'بازیابی و مرور',general:'عمومی و نهایی',class:'مدرسه و کلاس',personal:'شخصی و استراحت',exam:'آزمون'};
-  const subjectColors = { 'حسابان':'#8776eb','فیزیک':'#6c9cea','شیمی':'#59bda7','گسسته':'#d6a251','هندسه':'#df8da0','آمار و احتمال':'#9c8bd9','ادبیات':'#4fb49c','عربی':'#d59e52','دینی':'#4db79f','زبان':'#6f9be8','باشگاه':'#e48da1' };
+  const subjectColors = { 'حسابان':'#8776eb','فیزیک':'#6c9cea','شیمی':'#59bda7','گسسته':'#d6a251','هندسه':'#df8da0','آمار و احتمال':'#9c8bd9','ادبیات':'#4fb49c','فارسی':'#4fb49c','عربی':'#d59e52','تعلیمات دینی':'#4db79f','دینی':'#4db79f','زبان':'#6f9be8','زبان خارجی':'#6f9be8','سلامت و بهداشت':'#9c8bd9','علوم اجتماعی':'#d6a251','باشگاه':'#e48da1' };
   const defaultPlan = (window.STUDYOS_PLAN?.events || []).map(e => ({...e, status:e.status || 'planned'}));
   defaultPlan.push({id:'exam-az6',date:'2026-11-27',start:'',end:'',title:'آزمون آزمایشی خیلی سبز · ۶ آذر',detail:'آزمون طبق ساعت اعلام‌شده‌ی مؤسسه؛ قبل از شروع فقط مرور خلاصه و سؤال آسان. جمعه روز تعطیل باشگاه است.',type:'exam',subject:'آزمون',status:'planned',allDay:true});
   defaultPlan.push({id:'exam-azar27',date:'2026-12-18',start:'',end:'',title:'آزمون آزمایشی خیلی سبز · ۲۷ آذر',detail:'آزمون بعدی طبق برنامه راهبردی ثبت‌شده؛ محدوده دقیق را با اطلاعیه آزمون تطبیق بده.',type:'exam',subject:'آزمون',status:'planned',allDay:true});
@@ -403,8 +410,8 @@ window.STUDYOS_PLAN = {"events":[{"id":"p33","date":"2026-11-23","start":"۱۳:�
     return getFocusDate();
   }
   function renderDashboard(){
-    const date=dashboardDate(),ev=eventsForDate(date),st=getDayStats(todayKey()),studies=ev.filter(isStudyEvent),todayStudies=eventsForDate(todayKey()).filter(isStudyEvent),next=studies.find(e=>e.status!=='completed')||ev.find(e=>e.type==='exam');
-    const examDate='2026-11-27';const diff=Math.max(0,Math.ceil((new Date(examDate+'T12:00:00')-new Date(todayKey()+'T12:00:00'))/86400000));
+    const date=dashboardDate(),ev=eventsForDate(date),st=getDayStats(todayKey()),studies=ev.filter(isStudyEvent),todayStudies=eventsForDate(todayKey()).filter(isStudyEvent),next=studies.find(e=>e.status==='planned'&&(!e.start||parseTime(e.end)>new Date().getHours()*60+new Date().getMinutes()))||ev.find(e=>e.type==='exam');
+    const examDate=state.settings.konkurDate||'2026-11-27';const diff=Math.max(0,Math.ceil((new Date(examDate+'T12:00:00')-new Date(todayKey()+'T12:00:00'))/86400000));
     const weekly=weekChartData();const target=state.settings.targetMinutes||300;const pct=Math.min(100,Math.round(st.mins/target*100));
     const tasks=todayStudies.length;const completed=todayStudies.filter(e=>e.status==='completed').length;
     return `${heading('فضای مطالعه شخصی','خوش اومدی به فضای تمرکزت','قدم‌های کوچک و پیوسته، نتیجه‌های بزرگ می‌سازن.',`<button class="btn btn-outline" data-action="open-report">▤ گزارش امروز</button><button class="btn btn-primary" data-action="start-next">▶ شروع مطالعه</button>`)}
@@ -482,7 +489,7 @@ window.STUDYOS_PLAN = {"events":[{"id":"p33","date":"2026-11-23","start":"۱۳:�
   function renderReports(){
     const date=selectedReportDate;const logs=logsForDate(date);const st=getDayStats(date);const report=makeReport(date);
     return `${heading('خروجی و جمع‌بندی','گزارش روزانه','گزارش را هر زمان خواستی بساز؛ داده‌های تایمر و ثبت تست‌ها به شکل خودکار جمع می‌شوند.',`<button class="btn btn-outline" data-action="copy-report">▣ کپی گزارش</button><button class="btn btn-primary" data-action="download-report">⇩ دانلود TXT</button>`)}
-      <div class="card"><div class="card-head"><div><h3>گزارش یک روز</h3><p>تاریخ را انتخاب کن تا تمام فعالیت‌های ثبت‌شده جمع‌بندی شود.</p></div><input id="reportDate" type="date" class="pill-select" value="${date}" /></div><div class="card-body"><div class="metrics-grid" style="margin-top:0"><div class="metric-card"><div class="metric-icon purple">◷</div><div class="metric-text"><small>مطالعه مفید</small><strong>${formatMinutes(st.mins)}</strong></div></div><div class="metric-card"><div class="metric-icon mint">✓</div><div class="metric-text"><small>نشست ثبت‌شده</small><strong>${fa(logs.length)}</strong></div></div><div class="metric-card"><div class="metric-icon amber">✎</div><div class="metric-text"><small>تعداد تست</small><strong>${fa(logs.reduce((s,l)=>s+(l.questions||0),0))}</strong></div></div><div class="metric-card"><div class="metric-icon blue">◎</div><div class="metric-text"><small>فعالیت تکمیل‌شده</small><strong>${fa(st.done)} / ${fa(st.ev.length)}</strong></div></div></div><div class="divider"></div><div class="report-box" id="reportText">${escapeHtml(report)}</div><div class="inline-actions" style="margin-top:13px"><button class="btn btn-primary" data-action="copy-report">کپی برای ارسال به ChatGPT</button><button class="btn btn-outline" data-view="assistant">تحلیل با دستیار داخل سایت</button></div></div></div>`;
+      <div class="card"><div class="card-head"><div><h3>گزارش یک روز</h3><p>تاریخ را انتخاب کن تا تمام فعالیت‌های ثبت‌شده جمع‌بندی شود.</p></div><input id="reportDate" type="text" inputmode="numeric" class="pill-select jalali-date-input" placeholder="۱۴۰۵/۰۹/۰۲" value="${toJalaliInput(date)}" aria-label="تاریخ شمسی گزارش" /></div><div class="card-body"><div class="metrics-grid" style="margin-top:0"><div class="metric-card"><div class="metric-icon purple">◷</div><div class="metric-text"><small>مطالعه مفید</small><strong>${formatMinutes(st.mins)}</strong></div></div><div class="metric-card"><div class="metric-icon mint">✓</div><div class="metric-text"><small>نشست ثبت‌شده</small><strong>${fa(logs.length)}</strong></div></div><div class="metric-card"><div class="metric-icon amber">✎</div><div class="metric-text"><small>تعداد تست</small><strong>${fa(logs.reduce((s,l)=>s+(l.questions||0),0))}</strong></div></div><div class="metric-card"><div class="metric-icon blue">◎</div><div class="metric-text"><small>فعالیت تکمیل‌شده</small><strong>${fa(st.done)} / ${fa(st.ev.length)}</strong></div></div></div><div class="divider"></div><div class="report-box" id="reportText">${escapeHtml(report)}</div><div class="inline-actions" style="margin-top:13px"><button class="btn btn-primary" data-action="copy-report">کپی برای ارسال به ChatGPT</button><button class="btn btn-outline" data-view="assistant">تحلیل با دستیار داخل سایت</button></div></div></div>`;
   }
   function makeReport(date){
     const logs=logsForDate(date),ev=eventsForDate(date).filter(isStudyEvent),mins=minutesFromLogs(logs),questions=logs.reduce((s,l)=>s+(l.questions||0),0),correct=logs.reduce((s,l)=>s+(l.correct||0),0),wrong=logs.reduce((s,l)=>s+(l.wrong||0),0);
@@ -496,7 +503,7 @@ window.STUDYOS_PLAN = {"events":[{"id":"p33","date":"2026-11-23","start":"۱۳:�
       <div class="settings-layout"><div class="card settings-tabs"><button class="${currentSettingsTab==='general'?'active':''}" data-tab="general">تنظیمات مطالعه</button><button class="${currentSettingsTab==='gym'?'active':''}" data-tab="gym">برنامه باشگاه</button><button class="${currentSettingsTab==='connect'?'active':''}" data-tab="connect">اتصال Cloudflare و AI</button><button class="${currentSettingsTab==='backup'?'active':''}" data-tab="backup">پشتیبان‌گیری</button></div><div class="card settings-content">${settingsTabContent()}</div></div>`;
   }
   function settingsTabContent(){
-    if(currentSettingsTab==='general')return `<h3>تنظیمات مطالعه</h3><p>هدف‌ها به‌عنوان راهنما استفاده می‌شوند و قرار نیست با فشار آوردن به خواب یا سلامت جبران شوند.</p><div class="settings-section"><div class="form-grid"><div class="field"><label>هدف مطالعه روزانه (دقیقه)</label><input id="targetMinutes" type="number" min="30" max="900" value="${state.settings.targetMinutes}" /></div><div class="field"><label>مدت پیش‌فرض نشست (دقیقه)</label><input id="sessionLength" type="number" min="15" max="180" value="${state.settings.sessionLength}" /></div><div class="field"><label>استراحت پیشنهادی بین نشست‌ها (دقیقه)</label><input id="breakLength" type="number" min="3" max="45" value="${state.settings.breakLength}" /></div><div class="field"><label>فاصله یادآوری استراحت کوتاه (دقیقه)</label><input id="breakInterval" type="number" min="25" max="120" value="${state.settings.breakInterval||50}" /></div><div class="field"><label>مدت استراحت کوتاه (دقیقه)</label><input id="microBreakMinutes" type="number" min="1" max="10" value="${state.settings.microBreakMinutes||2}" /></div><div class="field"><label>تاریخ کنکور (برای روزشمار)</label><input id="konkurDate" type="date" value="${escapeAttr(state.settings.konkurDate||'')}" /><span class="field-help">تاریخ رسمی کنکور ۱۴۰۶ هنوز اعلام نشده است؛ پس از انتشار اطلاعیه سازمان سنجش، تاریخ معتبر را اینجا وارد کن تا روزشمار فعال شود.</span></div><div class="field"><label>حالت کاهش حرکت</label><select id="reduceMotion"><option value="false" ${!state.settings.reduceMotion?'selected':''}>خاموش</option><option value="true" ${state.settings.reduceMotion?'selected':''}>روشن</option></select></div></div></div><div class="settings-section"><h3>قواعد ثابت</h3><p>زمان مدرسه، کلاس‌های کنکور و خواب باید در اولویت حفظ شوند. تغییر برنامه را با توجه به ظرفیت واقعی انجام بده.</p><div class="helper-box">توصیه اجرایی: پس از هر فیلم آموزشی، تمرین تشریحی و بازیابی از حافظه انجام بده. صرف تماشای فیلم به‌عنوان تسلط ثبت نمی‌شود.</div></div>`;
+    if(currentSettingsTab==='general')return `<h3>تنظیمات مطالعه</h3><p>هدف‌ها به‌عنوان راهنما استفاده می‌شوند و قرار نیست با فشار آوردن به خواب یا سلامت جبران شوند.</p><div class="settings-section"><div class="form-grid"><div class="field"><label>هدف مطالعه روزانه (دقیقه)</label><input id="targetMinutes" type="number" min="30" max="900" value="${state.settings.targetMinutes}" /></div><div class="field"><label>مدت پیش‌فرض نشست (دقیقه)</label><input id="sessionLength" type="number" min="15" max="180" value="${state.settings.sessionLength}" /></div><div class="field"><label>استراحت پیشنهادی بین نشست‌ها (دقیقه)</label><input id="breakLength" type="number" min="3" max="45" value="${state.settings.breakLength}" /></div><div class="field"><label>فاصله یادآوری استراحت کوتاه (دقیقه)</label><input id="breakInterval" type="number" min="25" max="120" value="${state.settings.breakInterval||50}" /></div><div class="field"><label>مدت استراحت کوتاه (دقیقه)</label><input id="microBreakMinutes" type="number" min="1" max="10" value="${state.settings.microBreakMinutes||2}" /></div><div class="field"><label>تاریخ کنکور (برای روزشمار)</label><input id="konkurDate" type="text" inputmode="numeric" placeholder="۱۴۰۵/۰۹/۰۲" value="${escapeAttr(toJalaliInput(state.settings.konkurDate||''))}" /><span class="field-help">تاریخ رسمی را پس از اعلام سازمان سنجش به شمسی وارد کن تا روزشمار فعال شود.</span></div><div class="field"><label>حالت کاهش حرکت</label><select id="reduceMotion"><option value="false" ${!state.settings.reduceMotion?'selected':''}>خاموش</option><option value="true" ${state.settings.reduceMotion?'selected':''}>روشن</option></select></div></div></div><div class="settings-section"><h3>قواعد ثابت</h3><p>زمان مدرسه، کلاس‌های کنکور و خواب باید در اولویت حفظ شوند. تغییر برنامه را با توجه به ظرفیت واقعی انجام بده.</p><div class="helper-box">توصیه اجرایی: پس از هر فیلم آموزشی، تمرین تشریحی و بازیابی از حافظه انجام بده. صرف تماشای فیلم به‌عنوان تسلط ثبت نمی‌شود.</div></div>`;
     if(currentSettingsTab==='gym'){
       const days=[['شنبه',6],['یکشنبه',0],['دوشنبه',1],['سه‌شنبه',2],['چهارشنبه',3],['پنجشنبه',4],['جمعه',5]];
       return `<h3>برنامه باشگاه</h3><p>روزهای انتخابی برای تمرین بدنسازی. جمعه به‌صورت قطعی تعطیل است و قابل انتخاب نیست.</p><div class="settings-section"><div class="gym-days">${days.map(([n,v])=>`<span class="day-chip ${v===5?'disabled':''}"><input type="checkbox" id="gym${v}" value="${v}" ${state.settings.gymDays.includes(v)?'checked':''} ${v===5?'disabled':''}/><label for="gym${v}">${n}${v===5?' · تعطیل':''}</label></span>`).join('')}</div><p class="field-help" style="margin-top:12px">روزهای انتخاب‌شده صرفاً ترجیح هستند؛ برنامه نهایی با کلاس‌ها و خستگی هفته هماهنگ می‌شود.</p></div><div class="settings-section"><h3>زمان ترجیحی</h3><div class="field"><label>بازه معمول باشگاه</label><select id="gymTime"><option>۲۰:۰۰ تا ۲۲:۰۰</option><option>۱۹:۰۰ تا ۲۱:۰۰</option><option>۱۸:۰۰ تا ۲۰:۰۰</option></select></div></div>`;
@@ -513,7 +520,7 @@ window.STUDYOS_PLAN = {"events":[{"id":"p33","date":"2026-11-23","start":"۱۳:�
     $$('[data-tab]').forEach(b=>b.addEventListener('click',()=>{currentSettingsTab=b.dataset.tab;render();}));
     $$('[data-prompt]').forEach(b=>b.addEventListener('click',()=>{const input=$('#chatInput');if(input){input.value=b.dataset.prompt;input.focus();}}));
     $('#chatForm')?.addEventListener('submit',sendChat);
-    $('#reportDate')?.addEventListener('change',e=>{selectedReportDate=e.target.value;render();});
+    $('#reportDate')?.addEventListener('change',e=>{const iso=jalaliToIso(e.target.value);if(!iso){toast('تاریخ شمسی را به شکل ۱۴۰۵/۰۹/۰۲ وارد کن.','error');return;}selectedReportDate=iso;render();});
     $('#importFile')?.addEventListener('change',importBackup);
   }
   function baseCoreHandleAction(action,id,btn){
@@ -750,7 +757,7 @@ function openFinishModal(){
 function findOpenSlot(afterDate,duration=45){
  const starts=['08:30','09:30','10:30','11:30','14:30','15:30','16:30','17:30','19:00','20:00'];
  for(let offset=1;offset<=35;offset++){const d=new Date(afterDate+'T12:00:00');d.setDate(d.getDate()+offset);const key=localDateKey(d),dow=d.getDay();
-  for(const st of starts){const start=parseTime(st),end=start+duration;if(dow!==1&&dow!==5&&start<14*60+15)continue;
+  for(const st of starts){const start=parseTime(st),end=start+duration;if(![1,4,5].includes(dow)&&start<14*60+15)continue;
     // Fixed weekly commitments outside currently loaded plan.
     if(dow===0&&start<19*60&&end>15*60+30)continue; // Sunday: class + travel
     if(dow===2&&start<19*60&&end>14*60+30)continue; // Tuesday: physics class + travel
@@ -926,6 +933,303 @@ function saveSettingsFromForm(){
   if(music!==undefined)state.settings.musicUrl=music.trim();
   baseSaveSettingsFromForm();
 }
+
+
+  /* ===== StudyOS 0.4 · Persian planner, weighted courses, editable weekly routine ===== */
+  const COURSE_CATALOG = [
+    {name:'فارسی ۳',weight:11.09,group:'عمومی · نهایی'},
+    {name:'عربی، زبان قرآن ۳',weight:4.64,group:'عمومی · نهایی'},
+    {name:'تعلیمات دینی ۳',weight:8.47,group:'عمومی · نهایی'},
+    {name:'زبان خارجی ۳',weight:6.05,group:'عمومی · نهایی'},
+    {name:'سلامت و بهداشت',weight:1.76,group:'عمومی · نهایی'},
+    {name:'علوم اجتماعی',weight:1.31,group:'عمومی · نهایی'},
+    {name:'حسابان ۲',weight:8.17,group:'تخصصی · نهایی'},
+    {name:'هندسه ۳',weight:5.49,group:'تخصصی · نهایی'},
+    {name:'ریاضیات گسسته',weight:4.71,group:'تخصصی · نهایی'},
+    {name:'فیزیک ۳',weight:9.26,group:'تخصصی · نهایی'},
+    {name:'شیمی ۳',weight:10.70,group:'تخصصی · نهایی'}
+  ];
+  const COURSE_ALIASES = {
+    'حسابان':'حسابان ۲','حسابان۲':'حسابان ۲','هندسه':'هندسه ۳','گسسته':'ریاضیات گسسته','ریاضی گسسته':'ریاضیات گسسته',
+    'فیزیک':'فیزیک ۳','شیمی':'شیمی ۳','ادبیات':'فارسی ۳','فارسی':'فارسی ۳','عربی':'عربی، زبان قرآن ۳',
+    'دینی':'تعلیمات دینی ۳','دین':'تعلیمات دینی ۳','زبان':'زبان خارجی ۳','سلامت':'سلامت و بهداشت'
+  };
+  function canonicalCourse(value=''){
+    const raw=String(value).trim();
+    if(COURSE_CATALOG.some(c=>c.name===raw))return raw;
+    const key=raw.replace(/\s+/g,'');
+    return COURSE_ALIASES[key]||raw;
+  }
+  function courseInfo(value=''){
+    const name=canonicalCourse(value);
+    return COURSE_CATALOG.find(c=>c.name===name)||null;
+  }
+  function courseWeight(value=''){return courseInfo(value)?.weight||0;}
+  function courseOptionList(current=''){
+    const selected=canonicalCourse(current);
+    const all=COURSE_CATALOG.map(c=>`<option value="${escapeAttr(c.name)}" ${selected===c.name?'selected':''}>${escapeHtml(c.name)} · ضریب ${fa(c.weight.toFixed(2))}</option>`).join('');
+    const extras=['باشگاه','مدرسه','کلاس حسابان','کلاس فیزیک','کلاس هندسه و گسسته و شیمی','آزمون','مرور ترکیبی','مطالعه آزاد'];
+    const extraOpts=extras.filter(x=>x===selected || (!COURSE_CATALOG.some(c=>c.name===x)&&!['باشگاه','مدرسه','کلاس حسابان','کلاس فیزیک','کلاس هندسه و گسسته و شیمی','آزمون','مرور ترکیبی','مطالعه آزاد'].includes(selected))).map(x=>`<option value="${escapeAttr(x)}" ${selected===x?'selected':''}>${escapeHtml(x)}</option>`).join('');
+    const custom=selected && !COURSE_CATALOG.some(c=>c.name===selected) && !extras.includes(selected) ? `<option value="${escapeAttr(selected)}" selected>${escapeHtml(selected)} · موضوع دلخواه</option>` : '';
+    return all+extraOpts+custom;
+  }
+  function jalaliToGregorian(jy,jm,jd){
+    jy=Number(jy);jm=Number(jm);jd=Number(jd);
+    if(!Number.isInteger(jy)||!Number.isInteger(jm)||!Number.isInteger(jd)||jm<1||jm>12||jd<1||jd>31)return null;
+    jy+=1595;
+    let days=-355668+(365*jy)+Math.floor(jy/33)*8+Math.floor(((jy%33)+3)/4)+jd+(jm<7?(jm-1)*31:((jm-7)*30+186));
+    let gy=400*Math.floor(days/146097);days%=146097;
+    if(days>36524){gy+=100*Math.floor(--days/36524);days%=36524;if(days>=365)days++;}
+    gy+=4*Math.floor(days/1461);days%=1461;
+    if(days>365){gy+=Math.floor((days-1)/365);days=(days-1)%365;}
+    let gd=days+1;
+    const leap=(gy%4===0&&gy%100!==0)||gy%400===0;
+    const months=[0,31,leap?29:28,31,30,31,30,31,31,30,31,30,31];
+    let gm=0;for(;gm<13&&gd>months[gm];gm++)gd-=months[gm];
+    return [gy,gm,gd];
+  }
+  function gregorianToJalali(gy,gm,gd){
+    const gdm=[0,31,59,90,120,151,181,212,243,273,304,334];
+    let jy=(gy<1600)?0:979;gy-=gy<1600?621:1600;
+    const gy2=gm>2?gy+1:gy;
+    let days=365*gy+Math.floor((gy2+3)/4)-Math.floor((gy2+99)/100)+Math.floor((gy2+399)/400)-80+gd+gdm[gm-1];
+    jy+=33*Math.floor(days/12053);days%=12053;
+    jy+=4*Math.floor(days/1461);days%=1461;
+    if(days>365){jy+=Math.floor((days-1)/365);days=(days-1)%365;}
+    const jm=days<186?1+Math.floor(days/31):7+Math.floor((days-186)/30);
+    const jd=1+(days<186?days%31:(days-186)%30);
+    return [jy,jm,jd];
+  }
+  function jalaliToIso(value){
+    const raw=en(String(value||'').trim()).replace(/[.\-]/g,'/');
+    const m=raw.match(/^(\d{4})\/(\d{1,2})\/(\d{1,2})$/);if(!m)return null;
+    const j=[Number(m[1]),Number(m[2]),Number(m[3])],g=jalaliToGregorian(...j);if(!g)return null;
+    const back=gregorianToJalali(...g);if(back.some((v,i)=>v!==j[i]))return null;
+    return `${g[0]}-${String(g[1]).padStart(2,'0')}-${String(g[2]).padStart(2,'0')}`;
+  }
+  function toJalaliInput(iso){
+    if(!iso)return '';
+    const m=String(iso).match(/^(\d{4})-(\d{2})-(\d{2})$/);if(!m)return '';
+    const j=gregorianToJalali(Number(m[1]),Number(m[2]),Number(m[3]));
+    return `${fa(j[0])}/${fa(String(j[1]).padStart(2,'0'))}/${fa(String(j[2]).padStart(2,'0'))}`;
+  }
+  function weekDates(idx=0){
+    const base=new Date(`${todayKey()}T12:00:00`);
+    base.setDate(base.getDate()-((base.getDay()+1)%7)+(Number(idx)||0)*7);
+    const out=[];for(let i=0;i<7;i++){const d=new Date(base);d.setDate(d.getDate()+i);out.push(localDateKey(d));}
+    return out;
+  }
+  function templateDay(date){
+    const dow=new Date(date+'T12:00:00').getDay();
+    const A=(start,end,title,subject,type='general',detail='')=>({start,end,title,subject,type,detail});
+    const C=(start,end,title,subject='مدرسه',detail='')=>({start,end,title,subject,type:'class',detail});
+    const rows={
+      6:[
+        C('08:00','13:45','مدرسه و مسیر رفت‌وبرگشت','مدرسه','مدرسه تا حدود ۱۲:۳۰؛ رسیدن به خانه حدود ۱۳:۴۵.'),
+        A('14:30','15:45','حسابان ۲ | آموزش و مثال مثلثات','حسابان ۲','learn','بخش دشوار را از آموزش یا جزوه بازبینی کن؛ بعد مثال را بدون نگاه به پاسخ حل کن.'),
+        A('16:00','17:00','شیمی ۳ | تمرین تشریحی و مسئله','شیمی ۳','practice','تمرین‌های کلاس را مستقل حل کن و داده‌ها و واحدها را بنویس.'),
+        A('17:15','18:00','فارسی ۳ | متن و پاسخ تشریحی','فارسی ۳','general','متن کتاب، واژگان و مفهوم؛ یک پاسخ کامل تشریحی بنویس.'),
+        A('18:10','18:50','عربی، زبان قرآن ۳ | ترجمه و قواعد','عربی، زبان قرآن ۳','general','ترجمه، قواعد و پاسخ به چند سؤال تشریحی.'),
+      ],
+      0:[
+        C('08:00','13:45','مدرسه و مسیر رفت‌وبرگشت','مدرسه','مدرسه تا حدود ۱۲:۳۰؛ رسیدن به خانه حدود ۱۳:۴۵.'),
+        A('14:00','14:25','مرور کوتاه فارسی ۳','فارسی ۳','general','مرور متن و دو پرسش کوتاه پیش از حرکت به کلاس.'),
+        C('14:30','19:00','مسیر و کلاس حسابان','کلاس حسابان','کلاس ۱۵:۳۰ تا ۱۸:۳۰؛ رسیدن به خانه حدود ۱۹:۰۰.'),
+        A('19:45','20:20','بازیابی کلاس حسابان ۲','حسابان ۲','recall','سه نکته کلاس و یک سؤال حل‌نشده را بدون جزوه بازسازی کن.'),
+        A('20:30','21:10','تعلیمات دینی ۳ | تشریحی','تعلیمات دینی ۳','general','متن درس را به پرسش و پاسخ تبدیل کن.'),
+      ],
+      1:[
+        A('08:00','09:15','فیزیک ۳ | آموزش مفهومی','فیزیک ۳','learn','یک بخش مشخص از آموزش را ببین؛ هر ۲۰ تا ۲۵ دقیقه مکث کن و مفهوم را با زبان خودت توضیح بده.'),
+        A('09:30','10:30','فیزیک ۳ | مثال و تمرین تشریحی','فیزیک ۳','practice','مثال‌ها را مستقل حل کن؛ فرمول، واحد و دلیل هر مرحله را بنویس.'),
+        A('10:45','11:45','فارسی ۳ | مطالعه نهایی','فارسی ۳','general','متن کتاب، واژه، املا و آرایه‌ها؛ دو پاسخ کامل بنویس.'),
+        A('13:30','14:45','شیمی ۳ | آموزش و یادداشت پرسشی','شیمی ۳','learn','آموزش بخش عقب‌مانده؛ نکته‌ها را به سؤال تبدیل کن.'),
+        A('15:00','15:45','تعلیمات دینی ۳ | بازیابی و تشریحی','تعلیمات دینی ۳','general','از حافظه پاسخ بنویس و سپس با متن کتاب اصلاح کن.'),
+        A('16:00','17:00','حسابان ۲ | تمرین مثلثات','حسابان ۲','practice','سؤال‌ها را بدون نگاه به پاسخ حل کن؛ خطاها را دسته‌بندی کن.'),
+        A('17:15','18:00','سلامت و بهداشت | مطالعه نهایی','سلامت و بهداشت','general','مطالعه متن کتاب و پاسخ به پرسش‌های پایان درس.'),
+      ],
+      2:[
+        C('08:00','14:00','مدرسه و مسیر','مدرسه','مدرسه تا حدود ۱۴:۰۰.'),
+        C('14:30','19:00','مسیر و کلاس فیزیک','کلاس فیزیک','کلاس ۱۵:۳۰ تا ۱۸:۰۰؛ حدود ۱۹:۰۰ خانه.'),
+        A('20:00','20:40','بازیابی کلاس فیزیک ۳','فیزیک ۳','recall','سه نکته کلاس و سه سؤال کوتاه بدون جزوه.'),
+        A('20:50','21:30','زبان خارجی ۳ | واژگان و متن','زبان خارجی ۳','general','واژگان را از حافظه بازیابی کن و یک متن کوتاه بخوان.'),
+      ],
+      3:[
+        C('08:00','13:45','مدرسه و مسیر رفت‌وبرگشت','مدرسه','مدرسه تا حدود ۱۲:۳۰؛ رسیدن خانه حدود ۱۳:۴۵.'),
+        A('14:45','15:45','حسابان ۲ | تست آموزشی','حسابان ۲','practice','تست‌های منتخب از تابع یا مثلثات؛ برای هر غلط دلیل بنویس.'),
+        A('16:00','17:00','هندسه ۳ | استدلال و تمرین','هندسه ۳','practice','راه‌حل تشریحی را کامل بنویس و شکل را دقیق رسم کن.'),
+        A('17:15','18:00','عربی، زبان قرآن ۳ | تشریحی','عربی، زبان قرآن ۳','general','ترجمه و قواعد؛ پاسخ کامل به سؤال‌های کتاب.'),
+        A('18:15','19:00','علوم اجتماعی | مطالعه نهایی','علوم اجتماعی','general','متن کتاب را به پرسش‌های کوتاه تبدیل کن و از حافظه جواب بده.'),
+      ],
+      4:[
+        A('08:00','09:15','ریاضیات گسسته | آموزش مفهومی','ریاضیات گسسته','learn','تعریف‌ها و مثال‌ها را از پایه یاد بگیر؛ هر تعریف را با زبان خودت توضیح بده.'),
+        A('09:30','10:30','هندسه ۳ | تمرین تشریحی','هندسه ۳','practice','تمرین‌های فصل جاری؛ استدلال هر گام را بنویس.'),
+        A('10:45','11:30','سلامت و بهداشت | مرور فعال','سلامت و بهداشت','general','پرسش‌وپاسخ از متن کتاب و بازیابی بدون نگاه.'),
+        A('11:45','12:30','عربی، زبان قرآن ۳ | مرور فاصله‌دار','عربی، زبان قرآن ۳','recall','قواعد و ترجمه‌های علامت‌دار را دوباره حل کن.'),
+        C('14:30','21:00','مسیر و کلاس‌های پنجشنبه','کلاس هندسه، گسسته و شیمی','هندسه و گسسته ۱۵:۰۰ تا ۱۸:۳۰؛ شیمی ۱۸:۳۰ تا ۲۰:۳۰؛ حدود ۲۱:۰۰ خانه.'),
+      ],
+      5:[
+        A('08:00','09:15','شیمی ۳ | آموزش مفهومی','شیمی ۳','learn','یک مبحث مشخص را از آموزش یا کتاب یاد بگیر؛ نکته‌ها را پرسشی بنویس.'),
+        A('09:30','10:30','شیمی ۳ | مسئله و تشریحی','شیمی ۳','practice','مسئله‌ها را مستقل حل کن و جواب را با واحد و استدلال بنویس.'),
+        A('10:45','11:45','فارسی ۳ | تمرین نهایی','فارسی ۳','general','متن و مفهوم، املا، واژگان و نوشتن پاسخ تشریحی.'),
+        A('13:30','14:30','فیزیک ۳ | تست و تحلیل','فیزیک ۳','practice','تست آموزشی از مبحث واقعاً خوانده‌شده؛ هر غلط را تحلیل کن.'),
+        A('14:45','15:30','تعلیمات دینی ۳ | بازیابی','تعلیمات دینی ۳','general','پرسش‌های تشریحی را از حافظه جواب بده.'),
+        A('15:45','16:30','زبان خارجی ۳ | واژگان و گرامر','زبان خارجی ۳','general','مرور واژگان و یک تمرین گرامر/درک مطلب.'),
+        A('16:45','17:30','عربی، زبان قرآن ۳ | تمرین','عربی، زبان قرآن ۳','general','ترجمه، قواعد و یک پاسخ تشریحی.'),
+        A('17:45','18:30','علوم اجتماعی | مطالعه نهایی','علوم اجتماعی','general','متن کتاب و بازیابی نکات کلیدی.'),
+        A('18:40','19:10','مرور سلامت و بهداشت','سلامت و بهداشت','recall','مرور کوتاه پرسش‌های علامت‌دار؛ بدون شروع مبحث تازه.'),
+      ]
+    };
+    return (rows[dow]||[]).map(x=>({...x,date,id:null}));
+  }
+  function runScheduleMigration(){
+    if(state.settings.scheduleV2Applied)return;
+    // Replace the old fixed two-week draft, but preserve user-created entries, logs, tests and mistakes.
+    state.events=state.events.filter(e=>!/^p\d+$/.test(String(e.id||'')) && !(String(e.title||'').includes('باشگاه') && new Date((e.date||'')+'T12:00:00').getDay()===5));
+    state.settings.gymDays=(Array.isArray(state.settings.gymDays)?state.settings.gymDays:[6,1,3]).filter(d=>Number(d)!==5);
+    if(!state.settings.gymDays.length)state.settings.gymDays=[6,1,3];
+    state.settings.generatedWeeks=[];
+    state.settings.scheduleV2Applied=true;
+    saveState();
+  }
+  function ensureWeekPlan(index=0){
+    if(index<0)return;
+    state.settings.generatedWeeks=Array.isArray(state.settings.generatedWeeks)?state.settings.generatedWeeks:[];
+    const dates=weekDates(index),weekKey=dates[0];
+    if(state.settings.generatedWeeks.includes(weekKey))return;
+    const now=new Date(),nowMinutes=now.getHours()*60+now.getMinutes();
+    dates.forEach(date=>{
+      if(date<todayKey())return;
+      const exam=state.events.some(e=>e.date===date&&e.type==='exam');
+      if(exam)return;
+      const template=templateDay(date);
+      template.forEach((x,i)=>{
+        const end=parseTime(x.end);
+        if(date===todayKey() && isStudyEvent(x) && end!==null && end<=nowMinutes)return;
+        const id=`tplv2-${date}-${i}`;
+        if(state.events.some(e=>e.id===id))return;
+        state.events.push({id,date,start:x.start,end:x.end,title:x.title,detail:x.detail,subject:x.subject,type:x.type,status:'planned',source:'weekly-template-v2'});
+      });
+      const dow=new Date(date+'T12:00:00').getDay();
+      if(state.settings.gymDays.includes(dow) && !state.events.some(e=>e.date===date&&String(e.title||'').includes('باشگاه'))){
+        if(!(date===todayKey() && nowMinutes>=21*60+30))state.events.push({id:`tplv2-gym-${date}`,date,start:'20:00',end:'21:30',title:'باشگاه',detail:'جلسه بدنسازی؛ جمعه تعطیل است. بعد از تمرین، ریکاوری و زمان شخصی.',subject:'باشگاه',type:'personal',status:'planned',source:'weekly-template-v2'});
+      }
+    });
+    state.settings.generatedWeeks.push(weekKey);saveState();
+  }
+  function weekTitleFor(dates){return `هفته ${toJalaliInput(dates[0])} تا ${toJalaliInput(dates[6])}`;}
+  function renderSchedule(){
+    ensureWeekPlan(currentWeek);
+    const dates=weekDates(currentWeek),start=dates[0],end=dates[6];
+    const items=state.events.filter(e=>isStudyEvent(e)&&e.date>=start&&e.date<=end);
+    const done=items.filter(e=>e.status==='completed').length,partial=items.filter(e=>e.status==='partial').length,missed=items.filter(e=>e.status==='missed').length;
+    const totalWeight=items.reduce((sum,e)=>sum+courseWeight(e.subject),0);
+    const doneWeight=items.reduce((sum,e)=>sum+courseWeight(e.subject)*(e.status==='completed'?1:e.status==='partial'?.5:0),0);
+    const pct=totalWeight?Math.round(doneWeight/totalWeight*100):(items.length?Math.round((done+partial*.5)/items.length*100):0);
+    const courseCards=COURSE_CATALOG.map(c=>`<div class="course-weight-item ${c.group.startsWith('عمومی')?'general-course':'special-course'}"><div><strong>${escapeHtml(c.name)}</strong><small>${c.group}</small></div><b>${fa(c.weight.toFixed(2))}</b></div>`).join('');
+    return `${heading('برنامه شخصی و قابل ویرایش','برنامه هفتگی','هر روز را باز کن، فعالیت را شروع کن یا با یک لمس ویرایشش کن. تاریخ‌ها شمسی‌اند و مدت فعالیت را با ساعت و دقیقه جدا وارد می‌کنی.',`<button class="btn btn-outline" data-action="today-week">هفته جاری</button><button class="btn btn-outline" data-action="quick-add">＋ نشست آزاد</button><button class="btn btn-primary" data-action="start-next">▶ شروع قدم بعدی</button>`)}
+      <div class="schedule-toolbar planner-toolbar"><div class="week-switch"><button class="btn btn-outline btn-small" data-action="prev-week">→</button><strong>${weekTitleFor(dates)}</strong><button class="btn btn-outline btn-small" data-action="next-week">←</button></div><span class="muted tiny">هفته از شنبه شروع می‌شود · ${dateRangeLabel(start,end)}</span></div>
+      <section class="week-adaptive planner-summary"><div class="week-adaptive-head"><strong>پیشرفت این هفته</strong><span>بر اساس تکمیل فعالیت‌ها و ضریب درس</span></div><div class="overall-track"><i style="width:${pct}%"></i></div><div class="week-adaptive-grid" style="margin-top:12px"><div class="week-adaptive-stat"><strong>${fa(pct)}٪</strong><small>پیشرفت وزنی</small></div><div class="week-adaptive-stat"><strong>${fa(done)}</strong><small>کامل‌شده</small></div><div class="week-adaptive-stat"><strong>${fa(partial+missed)}</strong><small>ناقص / انجام‌نشده</small></div><div class="week-adaptive-stat"><strong>${fa(items.length)}</strong><small>فعالیت آموزشی</small></div></div><p class="week-adaptive-note">دوشنبه و جمعه مدرسه و کلاس نداری؛ برای همین صبح این دو روز هم برنامه مطالعه دارد. جمعه باشگاه مطلقاً تعطیل است. برنامه قابل ویرایش است و هر فعالیت را می‌توانی تغییر بدهی یا حذف کنی.</p></section>
+      <div class="schedule-grid planner-days">${dates.map(date=>dayCard(date)).join('')}</div>
+      <details class="course-weight-panel"><summary>ضرایب دروس و اولویت برنامه‌ریزی <span>۱۱ درس · مطابق جدول ارسالی</span></summary><div class="course-weight-grid">${courseCards}</div><p class="field-help">ضریب‌ها عیناً از جدول ارسالی تو وارد شده‌اند. از آن‌ها برای نمایش اهمیت نسبی درس‌ها و توزیع زمان استفاده می‌شود؛ این ضرایب به‌تنهایی جایگزین بودجه‌بندی رسمی آزمون یا نهایی نیستند.</p></details>
+      <div class="helper-box planner-help">برنامه هفتگی الگوی اولیه دارد؛ موضوع دقیق هر نشست را می‌توانی متناسب با تدریس کلاس و محدوده امتحان خودت اصلاح کنی. آموزش، تمرین تشریحی، تست و مرور در فعالیت‌های جداگانه دیده شده‌اند.</div>`;
+  }
+  function dayCard(date){
+    const ev=eventsForDate(date),study=ev.filter(isStudyEvent),done=study.filter(e=>e.status==='completed').length;
+    const exam=ev.some(e=>e.type==='exam');
+    return `<article class="day-card planner-day ${date===todayKey()?'today':''} ${exam?'exam-day':''}"><div class="day-card-head"><div><strong>${prettyDate(date,{weekday:'long'})}</strong><small>${prettyDate(date,{day:'numeric',month:'long',year:'numeric'})}</small></div><div class="day-head-actions"><span class="badge">${exam?'روز آزمون':`${fa(done)} از ${fa(study.length)} کامل`}</span><button class="btn btn-soft btn-small" data-action="add-event-date" data-id="${date}" aria-label="افزودن فعالیت به این روز">＋</button></div></div><div class="day-events">${ev.length?ev.map(eventCard).join(''):'<div class="day-empty">برای این روز هنوز فعالیتی ثبت نشده.</div>'}</div><div class="day-foot"><span>${fa(study.length)} فعالیت آموزشی</span><span>${formatMinutes(study.reduce((sum,e)=>sum+durationMinutes(e),0))}</span></div></article>`;
+  }
+  function eventCard(e){
+    const done=e.status==='completed',missed=e.status==='missed',partial=e.status==='partial',c=courseInfo(e.subject);
+    const time=e.allDay?'تمام‌روز':`${fmtTime(e.start)} تا ${fmtTime(e.end)}`;
+    return `<div class="event-card ${done?'completed':''}"><i class="event-rail ${e.type}"></i><div class="event-content"><div class="event-time">${time}</div><div class="event-title">${escapeHtml(e.title)} ${missed?'<span class="missed-badge">انجام‌نشده</span>':partial?'<span class="partial-badge">ناقص</span>':''}</div><div class="event-sub">${escapeHtml(e.detail||'')}${c?`<div class="event-course-meta">${escapeHtml(c.name)} · ضریب ${fa(c.weight.toFixed(2))} · ${c.group.startsWith('عمومی')?'نهایی / عمومی':'تخصصی / نهایی'}</div>`:''}</div><div class="event-actions">${isStudyEvent(e)?`<button data-action="${done?'view-log':'start-event'}" data-id="${e.id}">${done?'✓ مشاهده ثبت':missed?'↻ شروع جبرانی':'▶ شروع'}</button>`:''}<button data-action="edit-event" data-id="${e.id}">ویرایش</button></div></div></div>`;
+  }
+  function openEventModal(id,dateOverride){
+    const old=state.events.find(x=>x.id===id);
+    const defaultSubject='حسابان ۲';
+    const subject=old?canonicalCourse(old.subject||defaultSubject):defaultSubject;
+    const e=old||{date:dateOverride||dashboardDate(),start:'16:00',end:'17:00',title:'حسابان ۲ | تمرین و تست',detail:'',type:'practice',subject,status:'planned'};
+    const dur=old?durationMinutes(e):60;
+    const hours=Math.floor(dur/60),minutes=dur%60;
+    const typeOptions=Object.entries(typeLabels).map(([k,v])=>`<option value="${k}" ${e.type===k?'selected':''}>${v}</option>`).join('');
+    openModal(old?'ویرایش فعالیت برنامه':'افزودن فعالیت به برنامه',`<form id="eventForm" class="planner-form"><div class="form-grid"><div class="field full"><label>عنوان فعالیت</label><input id="eventTitle" required value="${escapeAttr(e.title)}" placeholder="مثلاً فارسی ۳ | پاسخ تشریحی" /></div><div class="field"><label>درس</label><select id="eventSubject">${courseOptionList(subject)}</select></div><div class="field"><label>نوع فعالیت</label><select id="eventType">${typeOptions}</select></div><div class="field"><label>تاریخ شمسی</label><input id="eventDateJalali" class="jalali-date-input" inputmode="numeric" placeholder="۱۴۰۵/۰۹/۰۲" value="${escapeAttr(toJalaliInput(e.date))}" required /></div><div class="field timed-only"><label>ساعت شروع</label><input type="time" id="eventStart" value="${escapeAttr(en(e.start||'16:00'))}" /></div><div class="field timed-only"><label>مدت · ساعت</label><input id="eventDurationHours" type="number" min="0" max="12" inputmode="numeric" value="${hours}" /></div><div class="field timed-only"><label>مدت · دقیقه</label><input id="eventDurationMinutes" type="number" min="0" max="59" inputmode="numeric" value="${minutes}" /></div><div class="field full"><label class="checkbox-line"><input id="eventAllDay" type="checkbox" ${e.allDay?'checked':''}/> فعالیت تمام‌روز (مثلاً آزمون)</label></div><div class="field full"><label>توضیحات و خروجی مورد انتظار</label><textarea id="eventDetail" placeholder="مثلاً ۸ تست آموزشی + بررسی تمام پاسخ‌های غلط">${escapeHtml(e.detail||'')}</textarea></div></div><div class="duration-preview" id="durationPreview">مدت: ${fa(hours)} ساعت و ${fa(minutes)} دقیقه</div><div class="modal-foot">${old?'<button type="button" id="deleteEvent" class="btn btn-danger">حذف فعالیت</button>':''}<button type="button" class="btn btn-outline" data-modal-close>انصراف</button><button type="submit" class="btn btn-primary">ذخیره تغییرات</button></div></form>`);
+    const updateDuration=()=>{const h=Math.max(0,Number(en($('#eventDurationHours')?.value)||0)),m=Math.max(0,Math.min(59,Number(en($('#eventDurationMinutes')?.value)||0)));if($('#durationPreview'))$('#durationPreview').textContent=`مدت: ${fa(h)} ساعت و ${fa(m)} دقیقه`;};
+    $('#eventDurationHours')?.addEventListener('input',updateDuration);$('#eventDurationMinutes')?.addEventListener('input',updateDuration);
+    const toggleAllDay=()=>{$$('.timed-only').forEach(el=>el.hidden=$('#eventAllDay')?.checked===true);};$('#eventAllDay')?.addEventListener('change',toggleAllDay);toggleAllDay();
+    $('#eventForm').addEventListener('submit',ev=>{
+      ev.preventDefault();
+      const iso=jalaliToIso($('#eventDateJalali').value);if(!iso){toast('تاریخ شمسی معتبر نیست؛ مثل ۱۴۰۵/۰۹/۰۲ وارد کن.','error');return;}
+      const allDay=$('#eventAllDay').checked;let start='',end='';
+      if(!allDay){
+        start=en($('#eventStart').value||'');if(!/^\d{2}:\d{2}$/.test(start)){toast('ساعت شروع را وارد کن.','error');return;}
+        const total=Math.max(0,Number(en($('#eventDurationHours').value)||0))*60+Math.max(0,Number(en($('#eventDurationMinutes').value)||0));
+        if(total<1){toast('مدت فعالیت باید بیشتر از صفر باشد.','error');return;}
+        const startMin=parseTime(start),endMin=startMin+total;if(endMin>1439){toast('پایان فعالیت نباید از نیمه‌شب عبور کند.','error');return;}
+        end=`${String(Math.floor(endMin/60)).padStart(2,'0')}:${String(endMin%60).padStart(2,'0')}`;
+      }
+      const title=$('#eventTitle').value.trim(),subject=$('#eventSubject').value,type=$('#eventType').value;
+      if(type==='personal'&&/باشگاه/.test(title)&&new Date(iso+'T12:00:00').getDay()===5){toast('جمعه باشگاه تعطیل است و نمی‌توانی برای آن روز جلسه ثبت کنی.','error');return;}
+      const startMin=parseTime(start),endMin=parseTime(end);
+      const overlaps=!allDay&&state.events.some(x=>x.id!==id&&x.date===iso&&!x.allDay&&parseTime(x.start)!==null&&parseTime(x.end)!==null&&startMin<parseTime(x.end)&&endMin>parseTime(x.start));
+      if(overlaps&&!confirm('این ساعت با فعالیت دیگری هم‌پوشانی دارد. با این حال ذخیره شود؟'))return;
+      const value={id:old?old.id:uid(),date:iso,start,end,title,subject,type,detail:$('#eventDetail').value.trim(),status:old?.status||'planned',allDay,source:old?.source||'manual',manuallyEdited:true};
+      if(old)Object.assign(old,value);else state.events.push(value);
+      saveState();closeModal();render();toast('فعالیت ذخیره شد.');
+    });
+    $('#deleteEvent')?.addEventListener('click',()=>{if(!confirm('این فعالیت از برنامه حذف شود؟'))return;state.events=state.events.filter(x=>x.id!==id);saveState();closeModal();render();toast('فعالیت حذف شد.');});
+    $$('[data-modal-close]',$('#modalBackdrop')).forEach(b=>b.addEventListener('click',closeModal));
+  }
+  function openQuickAdd(){
+    const subj='حسابان ۲';
+    openModal('شروع نشست آزاد',`<form id="quickForm" class="planner-form"><div class="form-grid"><div class="field"><label>درس</label><select id="freeSubject">${courseOptionList(subj)}</select></div><div class="field"><label>نوع فعالیت</label><select id="freeType"><option value="learn">آموزش / فیلم</option><option value="practice">تمرین تشریحی و تست</option><option value="recall">بازیابی و مرور</option><option value="general">مطالعه نهایی</option></select></div><div class="field full"><label>عنوان دقیق فعالیت</label><input id="freeTitle" required placeholder="مثلاً حل تمرین‌های مثلثات" /></div><div class="field"><label>ساعت شروع</label><input id="freeStart" type="time" value="16:00" /></div><div class="field"><label>مدت · ساعت</label><input id="freeHours" type="number" min="0" max="12" value="0" /></div><div class="field"><label>مدت · دقیقه</label><input id="freeMinutes" type="number" min="0" max="59" value="50" /></div><div class="field"><label>تاریخ شمسی</label><input id="freeDateJalali" class="jalali-date-input" inputmode="numeric" value="${escapeAttr(toJalaliInput(todayKey()))}" placeholder="۱۴۰۵/۰۹/۰۲" required /></div><div class="field full"><label>یادداشت (اختیاری)</label><textarea id="freeDetail" placeholder="خروجی مورد انتظار از این نشست..."></textarea></div></div><div class="modal-foot"><button type="button" class="btn btn-outline" data-modal-close>انصراف</button><button type="submit" class="btn btn-primary">شروع اتاق مطالعه</button></div></form>`);
+    $('#quickForm').addEventListener('submit',e=>{e.preventDefault();const iso=jalaliToIso($('#freeDateJalali').value);if(!iso){toast('تاریخ شمسی معتبر نیست.','error');return;}const h=Math.max(0,Number(en($('#freeHours').value)||0)),m=Math.max(0,Math.min(59,Number(en($('#freeMinutes').value)||0))),total=h*60+m;if(total<1){toast('مدت نشست را وارد کن.','error');return;}const start=en($('#freeStart').value||'16:00');const title=$('#freeTitle').value.trim();startFreeSession({subject:$('#freeSubject').value,type:$('#freeType').value,title,minutes:total,date:iso,detail:$('#freeDetail').value.trim(),start});});
+    $$('[data-modal-close]',$('#modalBackdrop')).forEach(b=>b.addEventListener('click',closeModal));
+  }
+  function renderReports(){
+    const date=selectedReportDate,logs=logsForDate(date),st=getDayStats(date),report=makeReport(date);
+    return `${heading('خروجی و جمع‌بندی','گزارش روزانه','تاریخ را شمسی انتخاب کن؛ زمان و نتیجه نشست‌ها از اتاق مطالعه جمع می‌شوند.',`<button class="btn btn-outline" data-action="copy-report">▣ کپی گزارش</button><button class="btn btn-primary" data-action="download-report">⇩ دانلود TXT</button>`)}
+      <div class="card"><div class="card-head"><div><h3>گزارش یک روز</h3><p>تاریخ شمسی را وارد کن؛ مثال: ۱۴۰۵/۰۹/۰۲</p></div><input id="reportDate" type="text" inputmode="numeric" class="pill-select jalali-date-input" placeholder="۱۴۰۵/۰۹/۰۲" value="${escapeAttr(toJalaliInput(date))}" /></div><div class="card-body"><div class="metrics-grid" style="margin-top:0"><div class="metric-card"><div class="metric-icon purple">◷</div><div class="metric-text"><small>مطالعه مفید</small><strong>${formatMinutes(st.mins)}</strong></div></div><div class="metric-card"><div class="metric-icon mint">✓</div><div class="metric-text"><small>نشست ثبت‌شده</small><strong>${fa(logs.length)}</strong></div></div><div class="metric-card"><div class="metric-icon amber">✎</div><div class="metric-text"><small>تعداد تست</small><strong>${fa(logs.reduce((sum,l)=>sum+(l.questions||0),0))}</strong></div></div><div class="metric-card"><div class="metric-icon blue">◎</div><div class="metric-text"><small>فعالیت کامل‌شده</small><strong>${fa(st.done)} / ${fa(st.ev.length)}</strong></div></div></div><div class="divider"></div><div class="report-box" id="reportText">${escapeHtml(report)}</div><div class="inline-actions" style="margin-top:13px"><button class="btn btn-primary" data-action="copy-report">کپی گزارش</button><button class="btn btn-outline" data-view="assistant">تحلیل با دستیار StudyOS</button></div></div></div>`;
+  }
+  function weekChartData(){
+    const base=new Date(`${todayKey()}T12:00:00`);base.setDate(base.getDate()-((base.getDay()+1)%7));const days=[];
+    for(let i=0;i<7;i++){const d=new Date(base);d.setDate(d.getDate()+i);const key=localDateKey(d);days.push({date:key,label:new Intl.DateTimeFormat('fa-IR-u-ca-persian',{weekday:'short'}).format(d),minutes:studiedMinutes(key)});}return days;
+  }
+  function saveSettingsFromForm(){
+    const raw=$('#konkurDate')?.value.trim()||'';let iso='';if(raw){iso=jalaliToIso(raw);if(!iso){toast('تاریخ کنکور را به شکل شمسی مثل ۱۴۰۶/۰۴/۱۲ وارد کن.','error');return;}$('#konkurDate').value=iso;}
+    const bi=$('#breakInterval')?.value,mb=$('#microBreakMinutes')?.value,music=$('#musicUrl')?.value;
+    if(iso)state.settings.konkurDate=iso;else state.settings.konkurDate='';
+    if(bi)state.settings.breakInterval=Math.max(25,Math.min(120,Number(en(bi))||50));
+    if(mb)state.settings.microBreakMinutes=Math.max(1,Math.min(10,Number(en(mb))||2));
+    if(music!==undefined)state.settings.musicUrl=music.trim();
+    baseSaveSettingsFromForm();
+    if(state.settings.gymDays)state.settings.gymDays=state.settings.gymDays.filter(d=>d!==5);
+    saveState();
+  }
+  function handleAction(action,id,btn){
+    switch(action){
+      case 'today-week':currentWeek=0;render();break;
+      case 'prev-week':currentWeek-=1;render();break;
+      case 'next-week':currentWeek+=1;render();break;
+      case 'add-event-date':openEventModal(null,id);break;
+      case 'custom-add-time':openCustomTimeModal();break;
+      case 'start-event-confirm':confirmStartPending();break;
+      case 'start-break':startMicroBreak();break;
+      case 'skip-break':{const a=state.activeSession;if(a){a.nextBreakAtMs=(a.nextBreakAtMs||elapsedMs(a))+15*60000;a.breakPrompted=false;saveState();}closeModal();break;}
+      case 'end-break':endMicroBreak();break;
+      case 'room-recommendation':requestRoomRecommendation();break;
+      default:baseHandleAction(action,id,btn);
+    }
+  }
+  function runScheduleMigration(){
+    if(state.settings.scheduleV2Applied)return;
+    state.events=state.events.filter(e=>!/^p\d+$/.test(String(e.id||'')) && !(String(e.title||'').includes('باشگاه') && new Date((e.date||'')+'T12:00:00').getDay()===5));
+    state.settings.gymDays=(Array.isArray(state.settings.gymDays)?state.settings.gymDays:[6,1,3]).filter(d=>Number(d)!==5);
+    if(!state.settings.gymDays.length)state.settings.gymDays=[6,1,3];
+    state.settings.generatedWeeks=[];state.settings.scheduleV2Applied=true;saveState();
+  }
+
+  runScheduleMigration();
+  ensureWeekPlan(0);
+  ensureWeekPlan(1);
 
   setNav();updateHeader();syncMissedActivities();render();checkServer(false).then(()=>loadCloudState());startTicker();
   // Service worker registration is handled by install.js.
