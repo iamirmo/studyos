@@ -205,6 +205,21 @@ input,select,textarea{max-width:100%;}
 @media(max-width:620px){.planner-days{grid-template-columns:minmax(0,1fr)}.course-weight-grid{grid-template-columns:minmax(0,1fr)}.course-weight-item{padding:10px 12px}.course-weight-panel{padding:13px}.course-weight-panel summary{font-size:11px}.planner-toolbar .week-switch{display:grid;grid-template-columns:auto 1fr auto}.planner-toolbar .week-switch strong{font-size:10px}.day-head-actions{gap:5px}.event-card{padding:9px}.event-title{font-size:11px}.event-sub{font-size:9px;line-height:1.75}.event-actions button{padding:5px 8px}.planner-form .form-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.planner-form .field.full{grid-column:1/-1}.planner-form .field label{font-size:10px}.planner-form input,.planner-form select{font-size:12px}.planner-form .modal-foot{flex-wrap:wrap}.jalali-date-input{min-width:0;width:100%}}
 @media(max-width:380px){.planner-form .form-grid{grid-template-columns:minmax(0,1fr)}.planner-form .field.full{grid-column:auto}.day-head-actions .badge{font-size:8px}}
 
+
+/* StudyOS 0.5 · one-tap completion + end-of-day reflection */
+.event-actions{align-items:center;flex-wrap:wrap}
+.event-check-button{display:inline-flex;align-items:center;gap:5px;border:1px solid #e6e9f2;background:#fff;color:#7e89a0;border-radius:8px;padding:5px 8px;font-size:9px;font-weight:800}
+.event-check-button .check-square{width:15px;height:15px;border:1.5px solid #b6bfd0;border-radius:4px;display:grid;place-items:center;font-size:11px;line-height:1}
+.event-check-button.checked{background:#e8f8f3;border-color:#bde9dc;color:#258c75}
+.event-check-button.checked .check-square{background:#39ad91;border-color:#39ad91;color:#fff}
+.daily-reflection{margin-top:16px;padding:18px 20px}
+.daily-reflection h3{font-size:13px;margin:0 0 5px}
+.daily-reflection p{font-size:10px;color:#8d98ad;margin:0 0 12px;line-height:1.9}
+.daily-reflection textarea{width:100%;min-height:125px;border:1px solid #e8ecf4;background:#fafbfe;border-radius:12px;padding:12px;color:#283552;font:inherit;font-size:11px;line-height:1.9;resize:vertical}
+.daily-reflection .reflection-actions{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;margin-top:11px}
+.daily-reflection .reflection-hint{font-size:9px;color:#9ba5b7}
+@media(max-width:620px){.daily-reflection{padding:15px}.event-check-button{padding:5px 7px}}
+
 </style>
 </head>
 <body>
@@ -256,7 +271,7 @@ input,select,textarea{max-width:100%;}
       <div id="viewRoot" class="view-root" aria-live="polite"></div>
 
       <footer class="app-footer">
-        <span>StudyOS <b>•</b> نسخه شخصی ۱.۰ · Adaptive Focus</span>
+        <span>StudyOS <b>•</b> نسخه شخصی ۱.۱ · Daily Check-in</span>
         <span><i class="footer-led"></i> ذخیره خودکار روی همین دستگاه</span>
       </footer>
     </main>
@@ -289,13 +304,14 @@ window.STUDYOS_PLAN = {"events":[{"id":"p33","date":"2026-11-23","start":"۱۳:�
     version:1,
     events: defaultPlan,
     logs:[],
+    dayNotes:{},
     tests:[],
     errors:[],
     chat:[{role:'bot',text:'سلام! من دستیار StudyOS هستم. می‌توانم گزارش مطالعه‌ات را بررسی کنم، برای یک مبحث تمرین بسازم یا در تحلیل خطاها کمکت کنم. فعلاً تحلیل محلی فعال است؛ با اتصال API، پاسخ هوشمند ابری هم در دسترس قرار می‌گیرد.'}],
     activeSession:null,
     settings:{
       targetMinutes:300,
-      sessionLength:50,
+      sessionLength:90,
       breakLength:10,
       breakInterval:50,
       microBreakMinutes:2,
@@ -627,7 +643,7 @@ window.STUDYOS_PLAN = {"events":[{"id":"p33","date":"2026-11-23","start":"۱۳:�
     if(/ضعف|خطا|مرور/.test(q)){return `دفتر خطای فعلی ${fa(open.length)} مورد باز دارد. ${open.slice(0,3).map(e=>`\n• ${e.subject}: ${e.title}`).join('')||'هنوز موردی در دفتر خطا ثبت نشده است.'}\nپیشنهاد: هر خطا را با سه برچسب مشخص کن: ضعف مفهوم، بی‌دقتی یا کمبود زمان. برای موارد ضعف مفهوم، یک مثال تشریحی دیگر حل کن؛ برای بی‌دقتی، تست زمان‌دار کوتاه بزن؛ برای کمبود زمان، روش کوتاه‌تر حل را تمرین کن.`;}
     return `پیامت رو دریافت کردم. در حالت محلی به داده‌های ثبت‌شده دسترسی دارم، اما برای توضیح تخصصی یک مبحث یا ساخت پاسخ محتوایی دقیق باید Gemini یا GPT به Worker متصل شود.\n\nداده فعلی: ${fa(all.length)} نشست، ${formatMinutes(total)} زمان مطالعه ثبت‌شده، ${fa(open.length)} مورد باز در دفتر خطا.\n\nمی‌تونی فعلاً از من بخوای گزارش روزانه، دفتر خطا یا روند مطالعه‌ات رو بر اساس همین داده‌ها جمع‌بندی کنم.`;
   }
-  function buildAIContext(){return {date:todayKey(),events:state.events.filter(e=>e.date>=todayKey()).slice(0,30),recentLogs:state.logs.slice(-30),openErrors:state.errors.filter(e=>!e.resolved),settings:{targetMinutes:state.settings.targetMinutes,sessionLength:state.settings.sessionLength}};}
+  function buildAIContext(){return {date:todayKey(),events:state.events.filter(e=>e.date>=todayKey()).slice(0,30),recentLogs:state.logs.slice(-30),openErrors:state.errors.filter(e=>!e.resolved),dailyNote:state.dayNotes?.[todayKey()]||'',settings:{targetMinutes:state.settings.targetMinutes,sessionLength:state.settings.sessionLength}};}
   async function checkServer(showToast=false){
     try{const r=await fetch('/api/health',{headers:{'Accept':'application/json'}});if(!r.ok)throw new Error('not found');const d=await r.json();serverHealth={online:true,ai:!!d.aiConfigured,provider:d.aiProvider||null,db:!!d.dbConfigured};if(showToast)toast(serverHealth.ai?'اتصال Worker و AI برقرار است.':'Worker در دسترس است؛ سرویس AI هنوز تنظیم نشده.');}
     catch{serverHealth={online:false,ai:false,provider:null,db:false};if(showToast)toast('Worker در این آدرس پیدا نشد؛ حالت محلی همچنان فعال است.','error');}
@@ -802,10 +818,12 @@ function eventCard(e){const done=e.status==='completed',missed=e.status==='misse
 function makeReport(date){
  const logs=logsForDate(date),ev=eventsForDate(date).filter(isStudyEvent),mins=minutesFromLogs(logs),questions=logs.reduce((s,l)=>s+(l.questions||0),0),correct=logs.reduce((s,l)=>s+(l.correct||0),0),wrong=logs.reduce((s,l)=>s+(l.wrong||0),0);
  const done=ev.filter(e=>e.status==='completed').length,partial=ev.filter(e=>e.status==='partial').length,missed=ev.filter(e=>e.status==='missed').length;
- const lines=[`گزارش مطالعه StudyOS — ${eventDateLabel({date})}`,`زمان مفید: ${formatMinutes(mins)}`,`نشست‌های ثبت‌شده: ${fa(logs.length)}`,`وضعیت برنامه: ${fa(done)} کامل · ${fa(partial)} ناقص · ${fa(missed)} انجام‌نشده از ${fa(ev.length)} فعالیت`, `تست: ${fa(questions)} | درست: ${fa(correct)} | غلط: ${fa(wrong)} | دقت: ${questions?fa(Math.round(correct/questions*100))+'٪':'ثبت نشده'}`, '', 'گزارش دقیق نشست‌ها:'];
- if(logs.length)logs.forEach((l,i)=>{lines.push(`${fa(i+1)}. ${l.title} — ${formatMinutes(l.minutes)} | وضعیت: ${l.status==='completed'?'کامل':l.status==='notdone'?'انجام‌نشده':'ناقص'} | تست ${fa(l.questions||0)}، درست ${fa(l.correct||0)}، غلط ${fa(l.wrong||0)} | تمرین تشریحی ${fa(l.written||0)} | تسلط ${l.confidence?fa(l.confidence)+'/۵':'ثبت نشده'}`);if(l.workDone)lines.push(`   انجام‌شده: ${l.workDone}`);if(l.remainingWork)lines.push(`   باقی‌مانده: ${l.remainingWork} (${fa(l.remainingMinutes||0)} دقیقه)`);if(l.notes)lines.push(`   یادداشت: ${l.notes}`);if(l.rescheduledTasks?.length)lines.push(`   جبران در برنامه: ${fa(l.rescheduledTasks.length)} فعالیت آینده`);});else lines.push('هنوز نشست مطالعه‌ای ثبت نشده است.');
- lines.push('','فعالیت‌های برنامه‌ریزی‌شده:');if(ev.length)ev.forEach(e=>lines.push(`- ${e.title}: ${e.status==='completed'?'تکمیل':e.status==='missed'?'انجام‌نشده':e.status==='partial'?'ناقص':'در انتظار اجرا'}`));else lines.push('- برنامه‌ای ثبت نشده است.');
- lines.push('','درخواست تحلیل: بر اساس زمان مفید، دقت تست، میزان تسلط، موارد انجام‌نشده و جبران‌های برنامه‌ریزی‌شده، اولویت فردا و اصلاح برنامه را مشخص کن.');return lines.join('\\n');
+ const note=state.dayNotes?.[date]||'';
+ const lines=[`گزارش مطالعه StudyOS — ${eventDateLabel({date})}`,`زمان مفید تایمردار: ${formatMinutes(mins)}`,`نشست‌های ثبت‌شده: ${fa(logs.length)}`,`وضعیت برنامه: ${fa(done)} کامل · ${fa(partial)} ناقص · ${fa(missed)} انجام‌نشده از ${fa(ev.length)} فعالیت`, `تست: ${fa(questions)} | درست: ${fa(correct)} | غلط: ${fa(wrong)} | دقت: ${questions?fa(Math.round(correct/questions*100))+'٪':'ثبت نشده'}`, '', 'جزئیات نشست‌های تایمردار:'];
+ if(logs.length)logs.forEach((l,i)=>{lines.push(`${fa(i+1)}. ${l.title} — ${formatMinutes(l.minutes)} | وضعیت: ${l.status==='completed'?'کامل':l.status==='notdone'?'انجام‌نشده':'ناقص'} | تست ${fa(l.questions||0)}، درست ${fa(l.correct||0)}، غلط ${fa(l.wrong||0)} | تمرین تشریحی ${fa(l.written||0)} | تسلط ${l.confidence?fa(l.confidence)+'/۵':'ثبت نشده'}`);if(l.workDone)lines.push(`   انجام‌شده: ${l.workDone}`);if(l.remainingWork)lines.push(`   باقی‌مانده: ${l.remainingWork} (${fa(l.remainingMinutes||0)} دقیقه)`);if(l.notes)lines.push(`   یادداشت: ${l.notes}`);if(l.rescheduledTasks?.length)lines.push(`   جبران در برنامه: ${fa(l.rescheduledTasks.length)} فعالیت آینده`);});else lines.push('هنوز نشست مطالعه‌ای با تایمر ثبت نشده است.');
+ lines.push('','فعالیت‌های برنامه‌ریزی‌شده:');if(ev.length)ev.forEach(e=>lines.push(`- ${e.title}: ${e.status==='completed'?'تکمیل‌شده با تیک':e.status==='missed'?'انجام‌نشده':e.status==='partial'?'ناقص':'تیک نخورده / در انتظار اجرا'}`));else lines.push('- برنامه‌ای ثبت نشده است.');
+ lines.push('','گزارش پایان روز و تغییرات برنامه:',note||'یادداشتی ثبت نشده است.');
+ lines.push('','یادآوری: تیک دستی فقط وضعیت انجام فعالیت را ثبت می‌کند؛ زمان مفید، تعداد تست و تسلط فقط با ثبت نشست در اتاق مطالعه محاسبه می‌شوند.','درخواست تحلیل: بر اساس زمان مفید، دقت تست، میزان تسلط، فعالیت‌های انجام‌شده و تغییرات ثبت‌شده، اولویت فردا و اصلاح برنامه را مشخص کن.');return lines.join('\n');
 }
 
 /* ===== StudyOS 0.3 · guided sessions, adaptive week and reporting ===== */
@@ -1023,72 +1041,80 @@ function saveSettingsFromForm(){
     const dow=new Date(date+'T12:00:00').getDay();
     const A=(start,end,title,subject,type='general',detail='')=>({start,end,title,subject,type,detail});
     const C=(start,end,title,subject='مدرسه',detail='')=>({start,end,title,subject,type:'class',detail});
+    const P=(start,end,title,detail='')=>({start,end,title,subject:title,type:'personal',detail});
     const rows={
-      6:[
-        C('08:00','13:45','مدرسه و مسیر رفت‌وبرگشت','مدرسه','مدرسه تا حدود ۱۲:۳۰؛ رسیدن به خانه حدود ۱۳:۴۵.'),
-        A('14:30','15:45','حسابان ۲ | آموزش و مثال مثلثات','حسابان ۲','learn','بخش دشوار را از آموزش یا جزوه بازبینی کن؛ بعد مثال را بدون نگاه به پاسخ حل کن.'),
-        A('16:00','17:00','شیمی ۳ | تمرین تشریحی و مسئله','شیمی ۳','practice','تمرین‌های کلاس را مستقل حل کن و داده‌ها و واحدها را بنویس.'),
-        A('17:15','18:00','فارسی ۳ | متن و پاسخ تشریحی','فارسی ۳','general','متن کتاب، واژگان و مفهوم؛ یک پاسخ کامل تشریحی بنویس.'),
-        A('18:10','18:50','عربی، زبان قرآن ۳ | ترجمه و قواعد','عربی، زبان قرآن ۳','general','ترجمه، قواعد و پاسخ به چند سؤال تشریحی.'),
+      6:[ // Saturday: school, home 12:45
+        C('08:00','12:45','مدرسه و مسیر تا خانه','مدرسه','مدرسه تا حدود ۱۲:۳۰؛ ساعت ۱۲:۴۵ خانه‌ای.'),
+        P('12:45','14:15','ناهار و استراحت','بعد از رسیدن خانه لباس عوض کن، ناهار بخور و کمی استراحت کن.'),
+        A('14:15','15:45','شیمی ۳ | آموزش و جبران پایه','شیمی ۳','learn','از مبحث عقب‌مانده دهم/دوازدهم یک بخش مشخص را یاد بگیر؛ نکته‌ها را به سؤال تبدیل کن.'),
+        A('16:00','17:30','حسابان ۲ | مثلثات و مثال','حسابان ۲','learn','بخش دشوار مثلثات را از فیلم یا جزوه بازبینی کن؛ مثال‌ها را قبل از دیدن پاسخ حل کن.'),
+        A('17:45','19:15','فارسی ۳ | مطالعه و پاسخ تشریحی','فارسی ۳','general','متن کتاب، واژگان، املا و مفهوم؛ در پایان دو پاسخ کامل تشریحی بنویس.'),
       ],
-      0:[
-        C('08:00','13:45','مدرسه و مسیر رفت‌وبرگشت','مدرسه','مدرسه تا حدود ۱۲:۳۰؛ رسیدن به خانه حدود ۱۳:۴۵.'),
-        A('14:00','14:25','مرور کوتاه فارسی ۳','فارسی ۳','general','مرور متن و دو پرسش کوتاه پیش از حرکت به کلاس.'),
-        C('14:30','19:00','مسیر و کلاس حسابان','کلاس حسابان','کلاس ۱۵:۳۰ تا ۱۸:۳۰؛ رسیدن به خانه حدود ۱۹:۰۰.'),
-        A('19:45','20:20','بازیابی کلاس حسابان ۲','حسابان ۲','recall','سه نکته کلاس و یک سؤال حل‌نشده را بدون جزوه بازسازی کن.'),
-        A('20:30','21:10','تعلیمات دینی ۳ | تشریحی','تعلیمات دینی ۳','general','متن درس را به پرسش و پاسخ تبدیل کن.'),
+      0:[ // Sunday: school, home 12:45, calculus class 15:30–18:30
+        C('08:00','12:45','مدرسه و مسیر تا خانه','مدرسه','مدرسه تا حدود ۱۲:۳۰؛ ساعت ۱۲:۴۵ خانه‌ای.'),
+        P('12:45','14:30','ناهار و آماده‌شدن برای کلاس','ناهار، تعویض لباس و آماده‌شدن برای حرکت به کلاس.'),
+        C('14:30','19:00','مسیر و کلاس حسابان','کلاس حسابان','کلاس حسابان ۱۵:۳۰ تا ۱۸:۳۰؛ با مسیر، حدود ساعت ۱۹:۰۰ خانه می‌رسی.'),
+        A('20:00','20:45','بازیابی کلاس حسابان','حسابان ۲','recall','سه نکته مهم و یک سؤال حل‌نشده کلاس را بدون جزوه یادآوری کن؛ در صورت خستگی این بخش را سبک انجام بده.'),
       ],
-      1:[
-        A('08:00','09:15','فیزیک ۳ | آموزش مفهومی','فیزیک ۳','learn','یک بخش مشخص از آموزش را ببین؛ هر ۲۰ تا ۲۵ دقیقه مکث کن و مفهوم را با زبان خودت توضیح بده.'),
-        A('09:30','10:30','فیزیک ۳ | مثال و تمرین تشریحی','فیزیک ۳','practice','مثال‌ها را مستقل حل کن؛ فرمول، واحد و دلیل هر مرحله را بنویس.'),
-        A('10:45','11:45','فارسی ۳ | مطالعه نهایی','فارسی ۳','general','متن کتاب، واژه، املا و آرایه‌ها؛ دو پاسخ کامل بنویس.'),
-        A('13:30','14:45','شیمی ۳ | آموزش و یادداشت پرسشی','شیمی ۳','learn','آموزش بخش عقب‌مانده؛ نکته‌ها را به سؤال تبدیل کن.'),
-        A('15:00','15:45','تعلیمات دینی ۳ | بازیابی و تشریحی','تعلیمات دینی ۳','general','از حافظه پاسخ بنویس و سپس با متن کتاب اصلاح کن.'),
-        A('16:00','17:00','حسابان ۲ | تمرین مثلثات','حسابان ۲','practice','سؤال‌ها را بدون نگاه به پاسخ حل کن؛ خطاها را دسته‌بندی کن.'),
-        A('17:15','18:00','سلامت و بهداشت | مطالعه نهایی','سلامت و بهداشت','general','مطالعه متن کتاب و پاسخ به پرسش‌های پایان درس.'),
+      1:[ // Monday: fully free
+        A('08:30','10:00','ریاضیات گسسته | آموزش از پایه','ریاضیات گسسته','learn','از ابتدای مبحث کلاس شروع کن؛ تعریف‌ها را با زبان خودت توضیح بده و مثال معلم را یک‌بار بدون نگاه بازسازی کن.'),
+        A('10:15','11:45','فیزیک ۳ | فیلم و یادگیری مفهومی','فیزیک ۳','learn','یک بخش از فیلم عقب‌افتاده را ببین؛ هر ۲۰ تا ۲۵ دقیقه مکث و مثال را خودت حل کن.'),
+        P('11:45','12:45','ناهار و استراحت'),
+        A('12:45','14:15','شیمی ۳ | آموزش پایه و کتاب درسی','شیمی ۳','learn','پایه دهم را با کتاب و آموزش تکمیل کن؛ روابط و واکنش‌ها را از حفظ بازگو کن.'),
+        A('14:30','16:00','حسابان ۲ | تمرین مثلثات','حسابان ۲','practice','تمرین تشریحی و تست آموزشی از همان بخشی که در پارت قبل مرور کردی؛ همه غلط‌ها را تحلیل کن.'),
+        A('16:15','17:45','فارسی ۳ | آمادگی نهایی','فارسی ۳','general','متن درس، معنی، آرایه و املا؛ پاسخ تشریحی را کامل و با جمله‌بندی خودت بنویس.'),
+        A('18:00','19:00','تعلیمات دینی ۳ | بازیابی تشریحی','تعلیمات دینی ۳','general','یک درس را به پرسش‌وپاسخ تبدیل کن و بدون نگاه به کتاب جواب بده.'),
       ],
-      2:[
-        C('08:00','14:00','مدرسه و مسیر','مدرسه','مدرسه تا حدود ۱۴:۰۰.'),
-        C('14:30','19:00','مسیر و کلاس فیزیک','کلاس فیزیک','کلاس ۱۵:۳۰ تا ۱۸:۰۰؛ حدود ۱۹:۰۰ خانه.'),
-        A('20:00','20:40','بازیابی کلاس فیزیک ۳','فیزیک ۳','recall','سه نکته کلاس و سه سؤال کوتاه بدون جزوه.'),
-        A('20:50','21:30','زبان خارجی ۳ | واژگان و متن','زبان خارجی ۳','general','واژگان را از حافظه بازیابی کن و یک متن کوتاه بخوان.'),
+      2:[ // Tuesday: school, home 14:10, physics class
+        C('08:00','14:10','مدرسه و مسیر تا خانه','مدرسه','مدرسه تا حدود ۱۴:۰۰؛ ساعت ۱۴:۱۰ خانه‌ای.'),
+        P('14:10','14:30','میان‌وعده و آماده‌شدن برای کلاس','زمان کوتاه برای خوردن چیزی، تعویض لباس و آماده‌شدن؛ پارت مطالعه اجباری نمی‌گذاریم.'),
+        C('14:30','19:00','مسیر و کلاس فیزیک','کلاس فیزیک','کلاس فیزیک ۱۵:۳۰ تا ۱۸:۰۰؛ با مسیر، حدود ساعت ۱۹:۰۰ خانه می‌رسی.'),
+        A('20:00','20:45','مرور اختیاری فیزیک کلاس','فیزیک ۳','recall','فقط اگر انرژی داشتی: سه نکته کلاس و دو سؤال کوتاه را بدون جزوه مرور کن؛ در غیر این صورت استراحت کن.'),
       ],
-      3:[
-        C('08:00','13:45','مدرسه و مسیر رفت‌وبرگشت','مدرسه','مدرسه تا حدود ۱۲:۳۰؛ رسیدن خانه حدود ۱۳:۴۵.'),
-        A('14:45','15:45','حسابان ۲ | تست آموزشی','حسابان ۲','practice','تست‌های منتخب از تابع یا مثلثات؛ برای هر غلط دلیل بنویس.'),
-        A('16:00','17:00','هندسه ۳ | استدلال و تمرین','هندسه ۳','practice','راه‌حل تشریحی را کامل بنویس و شکل را دقیق رسم کن.'),
-        A('17:15','18:00','عربی، زبان قرآن ۳ | تشریحی','عربی، زبان قرآن ۳','general','ترجمه و قواعد؛ پاسخ کامل به سؤال‌های کتاب.'),
-        A('18:15','19:00','علوم اجتماعی | مطالعه نهایی','علوم اجتماعی','general','متن کتاب را به پرسش‌های کوتاه تبدیل کن و از حافظه جواب بده.'),
+      3:[ // Wednesday: home 12:45, gym in evening
+        C('08:00','12:45','مدرسه و مسیر تا خانه','مدرسه','مدرسه تا حدود ۱۲:۳۰؛ ساعت ۱۲:۴۵ خانه‌ای.'),
+        P('12:45','14:15','ناهار و استراحت'),
+        A('14:15','15:45','هندسه ۳ | آموزش و استدلال','هندسه ۳','learn','فصل جاری را از جزوه/فیلم تکمیل کن؛ شکل را خودت رسم کن و دلیل هر مرحله را بنویس.'),
+        A('16:00','17:30','فیزیک ۳ | تمرین تشریحی و تست','فیزیک ۳','practice','از مبحثی که یاد گرفته‌ای مثال تشریحی و تست آموزشی حل کن؛ تست غلط و نزده را دسته‌بندی کن.'),
+        A('17:45','19:15','عربی، زبان قرآن ۳ | ترجمه و قواعد','عربی، زبان قرآن ۳','general','ترجمه متن، قواعد و پاسخ تشریحی؛ پاسخ‌ها را با کتاب درسی بررسی کن.'),
       ],
-      4:[
-        A('08:00','09:15','ریاضیات گسسته | آموزش مفهومی','ریاضیات گسسته','learn','تعریف‌ها و مثال‌ها را از پایه یاد بگیر؛ هر تعریف را با زبان خودت توضیح بده.'),
-        A('09:30','10:30','هندسه ۳ | تمرین تشریحی','هندسه ۳','practice','تمرین‌های فصل جاری؛ استدلال هر گام را بنویس.'),
-        A('10:45','11:30','سلامت و بهداشت | مرور فعال','سلامت و بهداشت','general','پرسش‌وپاسخ از متن کتاب و بازیابی بدون نگاه.'),
-        A('11:45','12:30','عربی، زبان قرآن ۳ | مرور فاصله‌دار','عربی، زبان قرآن ۳','recall','قواعد و ترجمه‌های علامت‌دار را دوباره حل کن.'),
-        C('14:30','21:00','مسیر و کلاس‌های پنجشنبه','کلاس هندسه، گسسته و شیمی','هندسه و گسسته ۱۵:۰۰ تا ۱۸:۳۰؛ شیمی ۱۸:۳۰ تا ۲۰:۳۰؛ حدود ۲۱:۰۰ خانه.'),
+      4:[ // Thursday: morning free, afternoon classes
+        A('08:30','10:00','ریاضیات گسسته | تمرین و تثبیت','ریاضیات گسسته','practice','تمرین‌های مبحث کلاس را مستقل حل کن؛ اگر در تعریف‌ها مشکل داشتی قبل از تست به آموزش برگرد.'),
+        A('10:15','11:45','هندسه ۳ | تمرین تشریحی','هندسه ۳','practice','تمرین‌های فصل جاری؛ راه‌حل و استدلال را کامل بنویس و بعد با پاسخ‌نامه مقایسه کن.'),
+        A('12:00','12:30','سلامت و بهداشت | متن کتاب','سلامت و بهداشت','general','۳۰ دقیقه مطالعه دقیق متن و علامت‌گذاری نکات امتحانی.'),
+        A('12:30','13:00','علوم اجتماعی | بازیابی کتاب','علوم اجتماعی','general','۳۰ دقیقه مطالعه و پرسش‌وجواب از متن کتاب.'),
+        A('13:00','13:30','آمار و احتمال | پیش‌خوانی پایه','آمار و احتمال','learn','۳۰ دقیقه آشنایی با تعریف‌ها و حل یک مثال مقدماتی؛ فعلاً هدف فهم پایه است، نه حجم زیاد تست.'),
+        P('13:30','14:30','ناهار و آماده‌شدن برای کلاس'),
+        C('14:30','21:00','مسیر و کلاس‌های پنجشنبه','کلاس هندسه، گسسته و شیمی','هندسه و گسسته ۱۵:۰۰ تا ۱۸:۳۰؛ شیمی ۱۸:۳۰ تا ۲۰:۳۰؛ حدود ساعت ۲۱:۰۰ خانه‌ای.'),
       ],
-      5:[
-        A('08:00','09:15','شیمی ۳ | آموزش مفهومی','شیمی ۳','learn','یک مبحث مشخص را از آموزش یا کتاب یاد بگیر؛ نکته‌ها را پرسشی بنویس.'),
-        A('09:30','10:30','شیمی ۳ | مسئله و تشریحی','شیمی ۳','practice','مسئله‌ها را مستقل حل کن و جواب را با واحد و استدلال بنویس.'),
-        A('10:45','11:45','فارسی ۳ | تمرین نهایی','فارسی ۳','general','متن و مفهوم، املا، واژگان و نوشتن پاسخ تشریحی.'),
-        A('13:30','14:30','فیزیک ۳ | تست و تحلیل','فیزیک ۳','practice','تست آموزشی از مبحث واقعاً خوانده‌شده؛ هر غلط را تحلیل کن.'),
-        A('14:45','15:30','تعلیمات دینی ۳ | بازیابی','تعلیمات دینی ۳','general','پرسش‌های تشریحی را از حافظه جواب بده.'),
-        A('15:45','16:30','زبان خارجی ۳ | واژگان و گرامر','زبان خارجی ۳','general','مرور واژگان و یک تمرین گرامر/درک مطلب.'),
-        A('16:45','17:30','عربی، زبان قرآن ۳ | تمرین','عربی، زبان قرآن ۳','general','ترجمه، قواعد و یک پاسخ تشریحی.'),
-        A('17:45','18:30','علوم اجتماعی | مطالعه نهایی','علوم اجتماعی','general','متن کتاب و بازیابی نکات کلیدی.'),
-        A('18:40','19:10','مرور سلامت و بهداشت','سلامت و بهداشت','recall','مرور کوتاه پرسش‌های علامت‌دار؛ بدون شروع مبحث تازه.'),
+      5:[ // Friday: no school, no gym; protected exam day
+        A('08:30','10:00','شیمی ۳ | مسئله و تمرین تشریحی','شیمی ۳','practice','مسئله‌های مبحث خوانده‌شده را مستقل حل کن؛ دلیل هر واکنش و محاسبه را بنویس.'),
+        A('10:15','11:45','حسابان ۲ | تست و تحلیل','حسابان ۲','practice','تست ترکیبی از تابع و مثلثات؛ تست‌های غلط و شک‌دار را در دفتر خطا ثبت کن.'),
+        P('11:45','13:00','ناهار و استراحت'),
+        A('13:00','14:30','فیزیک ۳ | تست آموزشی و تحلیل','فیزیک ۳','practice','تست از مباحث واقعاً خوانده‌شده؛ برای هر پاسخ غلط علت را مشخص کن.'),
+        A('14:45','16:15','فارسی ۳ | آزمون تشریحی','فارسی ۳','general','یک مجموعه سؤال تشریحی از متن و تمرین‌های کتاب را بدون نگاه حل کن.'),
+        A('16:30','18:00','تعلیمات دینی ۳ | نهایی','تعلیمات دینی ۳','general','متن کتاب را دقیق بخوان؛ سؤال‌های مفهومی و آیات را از حافظه پاسخ بده.'),
+        A('18:15','19:00','زبان خارجی ۳ | واژگان و درک مطلب','زبان خارجی ۳','general','واژگان را بازیابی کن و یک تمرین گرامر یا درک مطلب انجام بده.'),
       ]
     };
-    return (rows[dow]||[]).map(x=>({...x,date,id:null}));
+    return (rows[dow]||[]).map((x,i)=>({...x,date,id:`tplv3-${date}-${i}`}));
   }
   function runScheduleMigration(){
-    if(state.settings.scheduleV2Applied)return;
-    // Replace the old fixed two-week draft, but preserve user-created entries, logs, tests and mistakes.
-    state.events=state.events.filter(e=>!/^p\d+$/.test(String(e.id||'')) && !(String(e.title||'').includes('باشگاه') && new Date((e.date||'')+'T12:00:00').getDay()===5));
-    state.settings.gymDays=(Array.isArray(state.settings.gymDays)?state.settings.gymDays:[6,1,3]).filter(d=>Number(d)!==5);
-    if(!state.settings.gymDays.length)state.settings.gymDays=[6,1,3];
+    if(state.settings.scheduleV3Applied)return;
+    // Remove only future auto-generated template events from older versions.
+    // Manual edits, manually-added events, completed history, logs, tests, errors and day notes stay intact.
+    state.events=state.events.filter(e=>{
+      const d=String(e.date||'');
+      const oldSeed=/^p\d+$/.test(String(e.id||''));
+      const oldTemplate=String(e.source||'')==='weekly-template-v2'||String(e.id||'').startsWith('tplv2-');
+      return !((oldSeed||oldTemplate)&&d>=todayKey()&&e.status==='planned'&&!e.manuallyEdited);
+    });
     state.settings.generatedWeeks=[];
-    state.settings.scheduleV2Applied=true;
+    state.settings.gymDays=(Array.isArray(state.settings.gymDays)?state.settings.gymDays:[6,1,3]).map(Number).filter(d=>d!==5);
+    if(!state.settings.gymDays.length)state.settings.gymDays=[6,1,3];
+    state.settings.sessionLength=90;
+    state.dayNotes=state.dayNotes&&typeof state.dayNotes==='object'?state.dayNotes:{};
+    state.settings.scheduleV3Applied=true;
     saveState();
   }
   function ensureWeekPlan(index=0){
@@ -1101,17 +1127,20 @@ function saveSettingsFromForm(){
       if(date<todayKey())return;
       const exam=state.events.some(e=>e.date===date&&e.type==='exam');
       if(exam)return;
-      const template=templateDay(date);
-      template.forEach((x,i)=>{
+      templateDay(date).forEach((x,i)=>{
         const end=parseTime(x.end);
-        if(date===todayKey() && isStudyEvent(x) && end!==null && end<=nowMinutes)return;
-        const id=`tplv2-${date}-${i}`;
+        if(date===todayKey()&&isStudyEvent(x)&&end!==null&&end<=nowMinutes)return;
+        const id=`tplv3-${date}-${i}`;
         if(state.events.some(e=>e.id===id))return;
-        state.events.push({id,date,start:x.start,end:x.end,title:x.title,detail:x.detail,subject:x.subject,type:x.type,status:'planned',source:'weekly-template-v2'});
+        // A manually-created item at the same time is never overwritten.
+        const startMin=parseTime(x.start),endMin=parseTime(x.end);
+        const collision=state.events.some(e=>e.date===date&&!e.allDay&&startMin!==null&&endMin!==null&&parseTime(e.start)!==null&&parseTime(e.end)!==null&&startMin<parseTime(e.end)&&endMin>parseTime(e.start));
+        if(collision)return;
+        state.events.push({...x,id,date,status:'planned',source:'weekly-template-v3'});
       });
       const dow=new Date(date+'T12:00:00').getDay();
-      if(state.settings.gymDays.includes(dow) && !state.events.some(e=>e.date===date&&String(e.title||'').includes('باشگاه'))){
-        if(!(date===todayKey() && nowMinutes>=21*60+30))state.events.push({id:`tplv2-gym-${date}`,date,start:'20:00',end:'21:30',title:'باشگاه',detail:'جلسه بدنسازی؛ جمعه تعطیل است. بعد از تمرین، ریکاوری و زمان شخصی.',subject:'باشگاه',type:'personal',status:'planned',source:'weekly-template-v2'});
+      if(state.settings.gymDays.includes(dow)&&!state.events.some(e=>e.date===date&&/باشگاه/.test(String(e.title||'')))){
+        if(!(date===todayKey()&&nowMinutes>=21*60+30))state.events.push({id:`tplv3-gym-${date}`,date,start:'20:00',end:'21:30',title:'باشگاه',detail:'جلسه بدنسازی؛ زمان رفت‌وبرگشت کوتاه در نظر گرفته شده. جمعه تعطیل باشگاه است.',subject:'باشگاه',type:'personal',status:'planned',source:'weekly-template-v3'});
       }
     });
     state.settings.generatedWeeks.push(weekKey);saveState();
@@ -1141,7 +1170,8 @@ function saveSettingsFromForm(){
   function eventCard(e){
     const done=e.status==='completed',missed=e.status==='missed',partial=e.status==='partial',c=courseInfo(e.subject);
     const time=e.allDay?'تمام‌روز':`${fmtTime(e.start)} تا ${fmtTime(e.end)}`;
-    return `<div class="event-card ${done?'completed':''}"><i class="event-rail ${e.type}"></i><div class="event-content"><div class="event-time">${time}</div><div class="event-title">${escapeHtml(e.title)} ${missed?'<span class="missed-badge">انجام‌نشده</span>':partial?'<span class="partial-badge">ناقص</span>':''}</div><div class="event-sub">${escapeHtml(e.detail||'')}${c?`<div class="event-course-meta">${escapeHtml(c.name)} · ضریب ${fa(c.weight.toFixed(2))} · ${c.group.startsWith('عمومی')?'نهایی / عمومی':'تخصصی / نهایی'}</div>`:''}</div><div class="event-actions">${isStudyEvent(e)?`<button data-action="${done?'view-log':'start-event'}" data-id="${e.id}">${done?'✓ مشاهده ثبت':missed?'↻ شروع جبرانی':'▶ شروع'}</button>`:''}<button data-action="edit-event" data-id="${e.id}">ویرایش</button></div></div></div>`;
+    const check=isStudyEvent(e)?`<button type="button" class="event-check-button ${done?'checked':''}" data-action="toggle-event-done" data-id="${escapeAttr(e.id)}" aria-pressed="${done?'true':'false'}" title="${done?'برداشتن تیک انجام فعالیت':'علامت‌زدن فعالیت به‌عنوان انجام‌شده'}"><span class="check-square">${done?'✓':''}</span>${done?'انجام شد':'تیک انجام'}</button>`:'';
+    return `<div class="event-card ${done?'completed':''}"><i class="event-rail ${e.type}"></i><div class="event-content"><div class="event-time">${time}</div><div class="event-title">${escapeHtml(e.title)} ${missed?'<span class="missed-badge">انجام‌نشده</span>':partial?'<span class="partial-badge">ناقص</span>':''}</div><div class="event-sub">${escapeHtml(e.detail||'')}${c?`<div class="event-course-meta">${escapeHtml(c.name)} · ضریب ${fa(c.weight.toFixed(2))} · ${c.group.startsWith('عمومی')?'نهایی / عمومی':'تخصصی / نهایی'}</div>`:''}</div><div class="event-actions">${check}${isStudyEvent(e)?`<button data-action="${done?'view-log':'start-event'}" data-id="${escapeAttr(e.id)}">${done?'جزئیات ثبت':'▶ شروع و ثبت زمان'}</button>`:''}<button data-action="edit-event" data-id="${escapeAttr(e.id)}">ویرایش</button></div></div></div>`;
   }
   function openEventModal(id,dateOverride){
     const old=state.events.find(x=>x.id===id);
@@ -1185,9 +1215,13 @@ function saveSettingsFromForm(){
     $$('[data-modal-close]',$('#modalBackdrop')).forEach(b=>b.addEventListener('click',closeModal));
   }
   function renderReports(){
-    const date=selectedReportDate,logs=logsForDate(date),st=getDayStats(date),report=makeReport(date);
-    return `${heading('خروجی و جمع‌بندی','گزارش روزانه','تاریخ را شمسی انتخاب کن؛ زمان و نتیجه نشست‌ها از اتاق مطالعه جمع می‌شوند.',`<button class="btn btn-outline" data-action="copy-report">▣ کپی گزارش</button><button class="btn btn-primary" data-action="download-report">⇩ دانلود TXT</button>`)}
-      <div class="card"><div class="card-head"><div><h3>گزارش یک روز</h3><p>تاریخ شمسی را وارد کن؛ مثال: ۱۴۰۵/۰۹/۰۲</p></div><input id="reportDate" type="text" inputmode="numeric" class="pill-select jalali-date-input" placeholder="۱۴۰۵/۰۹/۰۲" value="${escapeAttr(toJalaliInput(date))}" /></div><div class="card-body"><div class="metrics-grid" style="margin-top:0"><div class="metric-card"><div class="metric-icon purple">◷</div><div class="metric-text"><small>مطالعه مفید</small><strong>${formatMinutes(st.mins)}</strong></div></div><div class="metric-card"><div class="metric-icon mint">✓</div><div class="metric-text"><small>نشست ثبت‌شده</small><strong>${fa(logs.length)}</strong></div></div><div class="metric-card"><div class="metric-icon amber">✎</div><div class="metric-text"><small>تعداد تست</small><strong>${fa(logs.reduce((sum,l)=>sum+(l.questions||0),0))}</strong></div></div><div class="metric-card"><div class="metric-icon blue">◎</div><div class="metric-text"><small>فعالیت کامل‌شده</small><strong>${fa(st.done)} / ${fa(st.ev.length)}</strong></div></div></div><div class="divider"></div><div class="report-box" id="reportText">${escapeHtml(report)}</div><div class="inline-actions" style="margin-top:13px"><button class="btn btn-primary" data-action="copy-report">کپی گزارش</button><button class="btn btn-outline" data-view="assistant">تحلیل با دستیار StudyOS</button></div></div></div>`;
+    const date=selectedReportDate,logs=logsForDate(date),st=getDayStats(date),report=makeReport(date),note=state.dayNotes?.[date]||'';
+    return `${heading('خروجی و جمع‌بندی','گزارش روزانه','تیک فعالیت‌ها، نشست‌های تایمردار و توضیح تغییرات برنامه در گزارش روز ثبت می‌شوند.',`<button class="btn btn-outline" data-action="copy-report">▣ کپی گزارش</button><button class="btn btn-primary" data-action="download-report">⇩ دانلود TXT</button>`)}
+      <div class="card"><div class="card-head"><div><h3>گزارش یک روز</h3><p>تاریخ شمسی را انتخاب کن؛ مثال: ۱۴۰۵/۰۹/۰۳</p></div><input id="reportDate" type="text" inputmode="numeric" class="pill-select jalali-date-input" placeholder="۱۴۰۵/۰۹/۰۳" value="${escapeAttr(toJalaliInput(date))}" /></div>
+        <div class="card-body"><div class="metrics-grid" style="margin-top:0"><div class="metric-card"><div class="metric-icon purple">◷</div><div class="metric-text"><small>مطالعه مفید</small><strong>${formatMinutes(st.mins)}</strong></div></div><div class="metric-card"><div class="metric-icon mint">✓</div><div class="metric-text"><small>نشست ثبت‌شده</small><strong>${fa(logs.length)}</strong></div></div><div class="metric-card"><div class="metric-icon amber">✎</div><div class="metric-text"><small>تعداد تست</small><strong>${fa(logs.reduce((sum,l)=>sum+(l.questions||0),0))}</strong></div></div><div class="metric-card"><div class="metric-icon blue">◎</div><div class="metric-text"><small>فعالیت تیک‌خورده</small><strong>${fa(st.done)} / ${fa(st.ev.length)}</strong></div></div></div>
+          <section class="daily-reflection"><h3>گزارش پایان روز و تغییرات برنامه</h3><p>اینجا بنویس امروز در عمل چه کار کردی؛ مثلاً «به‌جای شیمی رفتم باشگاه»، «پارت حسابان را با فیزیک عوض کردم» یا «به‌خاطر خستگی فقط نصف برنامه را انجام دادم». این متن همراه گزارش روز ذخیره می‌شود.</p><textarea id="dailyNote" placeholder="امروز به‌جای ... ، ... انجام دادم. دلیلش ... بود. کارهایی که از برنامه جابه‌جا شدند: ...">${escapeHtml(note)}</textarea><div class="reflection-actions"><span class="reflection-hint">ذخیره روی همین دستگاه · قابل ویرایش در آینده</span><button class="btn btn-primary" data-action="save-day-note">ذخیره گزارش پایان روز</button></div></section>
+          <div class="divider"></div><div class="report-box" id="reportText">${escapeHtml(report)}</div><div class="inline-actions" style="margin-top:13px"><button class="btn btn-primary" data-action="copy-report">کپی گزارش</button><button class="btn btn-outline" data-view="assistant">تحلیل با دستیار StudyOS</button></div>
+        </div></div>`;
   }
   function weekChartData(){
     const base=new Date(`${todayKey()}T12:00:00`);base.setDate(base.getDate()-((base.getDay()+1)%7));const days=[];
@@ -1206,6 +1240,18 @@ function saveSettingsFromForm(){
   }
   function handleAction(action,id,btn){
     switch(action){
+      case 'toggle-event-done':{
+        const e=state.events.find(x=>x.id===id);
+        if(!e||!isStudyEvent(e))break;
+        if(e.status==='completed'){e.status='planned';delete e.completedAt;delete e.manualChecked;toast('تیک فعالیت برداشته شد.');}
+        else{e.status='completed';e.completedAt=new Date().toISOString();e.manualChecked=true;toast('فعالیت به‌عنوان انجام‌شده علامت خورد.');}
+        saveState();render();break;
+      }
+      case 'save-day-note':{
+        state.dayNotes=state.dayNotes&&typeof state.dayNotes==='object'?state.dayNotes:{};
+        state.dayNotes[selectedReportDate]=$('#dailyNote')?.value.trim()||'';
+        saveState();render();toast('گزارش پایان روز ذخیره شد.');break;
+      }
       case 'today-week':currentWeek=0;render();break;
       case 'prev-week':currentWeek-=1;render();break;
       case 'next-week':currentWeek+=1;render();break;
@@ -1220,12 +1266,24 @@ function saveSettingsFromForm(){
     }
   }
   function runScheduleMigration(){
-    if(state.settings.scheduleV2Applied)return;
-    state.events=state.events.filter(e=>!/^p\d+$/.test(String(e.id||'')) && !(String(e.title||'').includes('باشگاه') && new Date((e.date||'')+'T12:00:00').getDay()===5));
-    state.settings.gymDays=(Array.isArray(state.settings.gymDays)?state.settings.gymDays:[6,1,3]).filter(d=>Number(d)!==5);
+    if(state.settings.scheduleV3Applied)return;
+    // Remove only future auto-generated template events from older versions.
+    // Manual edits, manually-added events, completed history, logs, tests, errors and day notes stay intact.
+    state.events=state.events.filter(e=>{
+      const d=String(e.date||'');
+      const oldSeed=/^p\d+$/.test(String(e.id||''));
+      const oldTemplate=String(e.source||'')==='weekly-template-v2'||String(e.id||'').startsWith('tplv2-');
+      return !((oldSeed||oldTemplate)&&d>=todayKey()&&e.status==='planned'&&!e.manuallyEdited);
+    });
+    state.settings.generatedWeeks=[];
+    state.settings.gymDays=(Array.isArray(state.settings.gymDays)?state.settings.gymDays:[6,1,3]).map(Number).filter(d=>d!==5);
     if(!state.settings.gymDays.length)state.settings.gymDays=[6,1,3];
-    state.settings.generatedWeeks=[];state.settings.scheduleV2Applied=true;saveState();
+    state.settings.sessionLength=90;
+    state.dayNotes=state.dayNotes&&typeof state.dayNotes==='object'?state.dayNotes:{};
+    state.settings.scheduleV3Applied=true;
+    saveState();
   }
+
 
   runScheduleMigration();
   ensureWeekPlan(0);

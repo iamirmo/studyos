@@ -1,4 +1,4 @@
-const CACHE_NAME = 'studyos-github-v3-planner-20261123';
+const CACHE_NAME = 'studyos-github-v4-daily-checkin-20261124';
 const BASE_URL = new URL('./', self.registration.scope);
 const toURL = path => new URL(path, BASE_URL).href;
 const APP_SHELL = [
